@@ -1,0 +1,7 @@
+{
+  "name": "subscription_radar",
+  "version": "1.0.0",
+  "description": "Subscription Renewal Radar skill. Scan and flag upcoming yearly or monthly subscriptions.",
+  "capabilities": ["scan_renewals", "check_affiliates"],
+  "dependencies": ["agent_core.protected.subscription_radar.radar_engine"]
+}

@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.pylance",
+    "eamodio.gitlens",
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-vscode.powershell",
+    "tamasfe.even-better-toml",
+    "redhat.vscode-yaml"
+  ]
+}

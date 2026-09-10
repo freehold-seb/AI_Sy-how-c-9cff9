@@ -1,0 +1,7 @@
+{
+  "mode": "single_node",
+  "node2_online_expected": false,
+  "node2_status": "rebuild_pending",
+  "active_node": "BUTTCRUST_PC",
+  "notes": "Temporary mode while upstairs node is being rebuilt."
+}

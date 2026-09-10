@@ -1,0 +1,11 @@
+{
+  "service": "event",
+  "watchdog_pid": 14356,
+  "child_pid": 24168,
+  "status": "running",
+  "exit_code": null,
+  "restart_count": 0,
+  "last_runtime_seconds": null,
+  "stop_requested": false,
+  "updated_at": "2026-06-24T20:16:41"
+}

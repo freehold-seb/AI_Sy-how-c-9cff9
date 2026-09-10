@@ -1,0 +1,1 @@
+"""ForgeCheck core package."""

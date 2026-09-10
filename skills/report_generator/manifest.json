@@ -1,0 +1,7 @@
+{
+  "name": "report_generator",
+  "version": "1.0.0",
+  "description": "Generates professional, white-labeled client reports.",
+  "capabilities": ["generate_audit_report"],
+  "dependencies": ["agent_core.protected.tenant_boundary", "agent_core.protected.client_manager"]
+}

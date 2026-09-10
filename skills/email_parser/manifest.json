@@ -1,0 +1,7 @@
+{
+  "name": "email_parser",
+  "version": "1.0.0",
+  "description": "Read-only email ingestion stabilizer. Parses and classifies emails without modification.",
+  "capabilities": ["read_email", "extract_receipts", "classify_notices", "extract_invoices"],
+  "dependencies": ["agent_core.protected.permission_gate"]
+}

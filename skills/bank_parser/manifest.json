@@ -1,0 +1,7 @@
+{
+  "name": "bank_parser",
+  "version": "1.0.0",
+  "description": "Read-only bank statement ingestion.",
+  "capabilities": ["parse_csv", "extract_recurring", "read_only"],
+  "dependencies": ["agent_core.protected.permission_gate"]
+}

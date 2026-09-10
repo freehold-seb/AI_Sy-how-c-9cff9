@@ -1,0 +1,7 @@
+{
+  "name": "subscriptions",
+  "version": "1.0.0",
+  "description": "Subscription Auditor Skill",
+  "capabilities": ["parse_receipts", "detect_recurring", "track_renewals"],
+  "dependencies": []
+}

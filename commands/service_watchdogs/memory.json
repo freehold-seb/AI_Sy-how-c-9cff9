@@ -1,0 +1,11 @@
+{
+  "service": "memory",
+  "watchdog_pid": 7700,
+  "child_pid": 22228,
+  "status": "running",
+  "exit_code": null,
+  "restart_count": 0,
+  "last_runtime_seconds": null,
+  "stop_requested": false,
+  "updated_at": "2026-06-24T20:16:44"
+}

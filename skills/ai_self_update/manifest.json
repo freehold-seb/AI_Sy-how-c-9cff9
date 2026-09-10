@@ -1,0 +1,7 @@
+{
+  "name": "ai_self_update",
+  "version": "1.0.0",
+  "description": "Safe autonomous evolution agent. Proposes changes strictly to the safe mod zone.",
+  "capabilities": ["propose_changes", "run_tests"],
+  "dependencies": ["agent_core.protected.permission_gate", "agent_core.protected.self_update_firewall"]
+}

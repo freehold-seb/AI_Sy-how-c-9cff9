@@ -1,0 +1,7 @@
+{
+  "name": "webhook_agent",
+  "version": "1.0.0",
+  "description": "Secure inbound event receiver. Validates external triggers before alerting the Conductor.",
+  "capabilities": ["receive_payload", "validate_source", "queue_event"],
+  "dependencies": ["agent_core.protected.permission_gate"]
+}

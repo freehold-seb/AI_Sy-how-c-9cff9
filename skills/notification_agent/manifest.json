@@ -1,0 +1,7 @@
+{
+  "name": "notification_agent",
+  "version": "1.0.0",
+  "description": "The Voice of the Ecosystem. Surfaces pending approvals, alerts, and security escalations to the human.",
+  "capabilities": ["read_pending_approvals", "check_upcoming_renewals", "surface_security_alerts", "generate_unified_inbox"],
+  "dependencies": ["agent_core.protected.permission_gate"]
+}

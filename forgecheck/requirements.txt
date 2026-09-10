@@ -1,0 +1,2 @@
+# Phase 1.1 dependency for policy YAML loading.
+PyYAML>=6.0

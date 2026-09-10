@@ -1,0 +1,11 @@
+{
+  "service": "capture",
+  "watchdog_pid": 26360,
+  "child_pid": 13356,
+  "status": "running",
+  "exit_code": null,
+  "restart_count": 0,
+  "last_runtime_seconds": null,
+  "stop_requested": false,
+  "updated_at": "2026-08-18T20:54:22"
+}

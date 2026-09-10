@@ -1,0 +1,32 @@
+# Local credentials and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+credentials*.json
+secrets*.json
+
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Generated and machine-local data
+logs/
+captures/
+exports/
+imports/
+outer-data/
+aligned_models/
+backups/
+Quarantine/
+*.sqlite
+*.sqlite3
+*.db

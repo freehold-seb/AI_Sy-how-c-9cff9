@@ -1,6 +1,5 @@
 import importlib
 import json
-from datetime import datetime, timedelta
 
 from runner.run_verifier_pipeline import run_pipeline
 from verifier import evaluate_candidate
@@ -78,7 +77,6 @@ def test_pipeline_selects_best_candidate_when_explicitly_enabled(tmp_path):
 def test_daily_briefing_recent_files_ignores_git_dirs(tmp_path, monkeypatch):
     module = importlib.import_module("scripts.daily_briefing")
     monkeypatch.setattr(module, "ROOT", tmp_path)
-    cutoff = (datetime.now().astimezone() - timedelta(minutes=5)).timestamp()
 
     visible = tmp_path / "notes.txt"
     visible.write_text("ok", encoding="utf-8")

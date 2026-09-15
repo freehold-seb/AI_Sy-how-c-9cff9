@@ -18,6 +18,22 @@ def test_root_entrypoints_import():
     importlib.import_module("control_panel")
 
 
+def test_verifier_exports_use_implemented_helpers():
+    import verifier
+    from verifier.domain_rules import DomainRules
+    from verifier.metrics import MetricsEngine
+    from verifier.models import TaskSpec
+    from verifier.qc_learning import QCLearning
+    from verifier.schemas import SchemaEnforcer
+
+    assert verifier.DomainRules is DomainRules
+    assert verifier.MetricsEngine is MetricsEngine
+    assert verifier.QCLearning is QCLearning
+    assert verifier.SchemaEnforcer is SchemaEnforcer
+    assert verifier.TaskSpec is TaskSpec
+    assert verifier.TaskSpec.from_mapping({"task_id": "demo", "objective": "check"}).prompt == "check"
+
+
 def test_pipeline_is_blocked_by_default_config():
     result = run_pipeline({"task_id": "demo", "objective": "check"})
 
@@ -56,3 +72,34 @@ def test_pipeline_selects_best_candidate_when_explicitly_enabled(tmp_path):
         "task_id": "demo",
         "candidate": {"output": "high", "score": 2},
     }
+
+
+def test_daily_briefing_recent_files_ignores_git_dirs(tmp_path, monkeypatch):
+    module = importlib.import_module("scripts.daily_briefing")
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+
+    visible = tmp_path / "notes.txt"
+    visible.write_text("ok", encoding="utf-8")
+    git_file = tmp_path / ".git" / "objects" / "sample"
+    git_file.parent.mkdir(parents=True)
+    git_file.write_text("internal", encoding="utf-8")
+
+    for path in (visible, git_file):
+        path.touch()
+
+    recent = module.recent_files()
+
+    assert visible in recent
+    assert git_file not in recent
+
+
+def test_forgecheck_vendor_rules_import_and_fallback():
+    module = importlib.import_module("forgecheck.forgecheck_core.plan.vendor_rules")
+
+    assert module.recommendations_for_system_class("unknown") == [
+        {
+            "id": "manual_review",
+            "severity": "recommended",
+            "message": "Review the system classification manually before approving vendor actions.",
+        }
+    ]

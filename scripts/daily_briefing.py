@@ -31,7 +31,7 @@ def recent_files() -> list[Path]:
             path
             for path in ROOT.rglob("*")
             if path.is_file()
-            and "\\.git\\" not in str(path)
+            and ".git" not in path.parts
             and path.stat().st_mtime >= cutoff.timestamp()
         ),
         key=lambda path: path.stat().st_mtime,

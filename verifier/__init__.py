@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Mapping, Sequence
+
+from .domain_rules import DomainRules
+from .metrics import MetricsEngine
+from .models import CandidateOutput, QCDecision, TaskSpec, VerifiedCandidate, VerifierResult
+from .qc_learning import QCLearning
+from .schemas import SchemaEnforcer
 
 __all__ = [
     "Verifier",
@@ -22,63 +27,11 @@ __all__ = [
 ]
 
 
-@dataclass(frozen=True)
-class TaskSpec:
-    task_id: str
-    objective: str
-    input: Any = None
-
-    @classmethod
-    def from_mapping(cls, value: Mapping[str, Any]) -> "TaskSpec":
-        task_id = value.get("task_id") or value.get("id")
-        objective = value.get("objective")
-        if not isinstance(task_id, str) or not task_id.strip():
-            raise ValueError("taskspec requires a non-empty task_id")
-        if not isinstance(objective, str) or not objective.strip():
-            raise ValueError("taskspec requires a non-empty objective")
-        return cls(task_id=task_id, objective=objective, input=value.get("input"))
-
-
-@dataclass(frozen=True)
-class VerifierResult:
-    accepted: bool
-    reason: str
-    candidate: Mapping[str, Any] | None = None
-
-
 class Verifier:
     """Validate candidate shape without calling external services."""
 
     def evaluate(self, candidate: Mapping[str, Any]) -> VerifierResult:
         return evaluate_candidate(candidate)
-
-
-class DomainRules:
-    pass
-
-
-class MetricsEngine:
-    pass
-
-
-class CandidateOutput:
-    pass
-
-
-class QCDecision:
-    pass
-
-
-class VerifiedCandidate:
-    pass
-
-
-class QCLearning:
-    pass
-
-
-class SchemaEnforcer:
-    pass
 
 
 def apply_qc_decision(result: VerifierResult) -> Mapping[str, Any] | None:

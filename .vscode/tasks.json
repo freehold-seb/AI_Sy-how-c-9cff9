@@ -1,0 +1,164 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Inventory Related Workspaces",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/workspace_inventory.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare TRANSLATE Prompt",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/prepare_prompt.py",
+        "TRANSLATE"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare SAUCE Prompt",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/prepare_prompt.py",
+        "SAUCE"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare POLISH Prompt",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/prepare_prompt.py",
+        "POLISH"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare ELABORATE Prompt",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/prepare_prompt.py",
+        "ELABORATE"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Daily Project Briefing",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/daily_briefing.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Verifier Tests",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "-m",
+        "pytest",
+        "tests/test_repo_smoke.py",
+        "-q"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OCHRE Bridge",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/ochre_bridge.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

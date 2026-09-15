@@ -1,11 +1,3 @@
 ﻿{
-    "hooks":  {
-                  "PreToolUse":  [
-                                     {
-                                         "type":  "command",
-                                         "windows":  "python \"scripts\\\\ai\\\\copilot_hook_guard.py\"",
-                                         "timeout":  10
-                                     }
-                                 ]
-              }
+    "hooks": {}
 }

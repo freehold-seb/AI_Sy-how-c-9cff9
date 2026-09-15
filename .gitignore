@@ -20,6 +20,7 @@ __pycache__/
 
 # Generated and machine-local data
 logs/
+reports/
 captures/
 exports/
 imports/

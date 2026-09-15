@@ -1,7 +1,5 @@
----
 description: "Use when you want a slash command to audit Project-Rutabaga safety, hooks, queue discipline, and behavior state."
----
-Use the **System Auditor** agent to run a safe audit of Project-Rutabaga.
+Use the **Security Reviewer** agent to run a safe audit of Project-Rutabaga.
 
 Workflow:
 1. Inspect hooks and policy files.

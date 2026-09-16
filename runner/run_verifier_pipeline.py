@@ -55,13 +55,18 @@ def run_pipeline(
     )
     route = adapter.route(task.task_id)
     dry_run = _config_bool(config, "dry_run", True)
-    if dry_run:
-        log_dry_run_event("pipeline_execution", task.task_id)
-    if route["status"] == "blocked" or dry_run:
+    if route["status"] == "blocked":
         return {
             "status": "blocked",
             "task_id": task.task_id,
-            "reason": route.get("reason", "dry_run_enabled"),
+            "reason": route["reason"],
+        }
+    if dry_run:
+        log_dry_run_event("pipeline_execution", task.task_id)
+        return {
+            "status": "blocked",
+            "task_id": task.task_id,
+            "reason": "dry_run_enabled",
         }
     selected = choose_best_candidate(candidates or [])
     if selected is None:

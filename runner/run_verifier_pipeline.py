@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from agent_core.config import parse_bool, validate_config
 from runner.orchestrator_adapter import OrchestratorAdapter
 from verifier import TaskSpec, choose_best_candidate
 
@@ -25,7 +26,21 @@ def load_taskspec(source: str | Path | Mapping[str, Any]) -> TaskSpec:
 
 
 def _load_config(config_path: str | Path = CONFIG_PATH) -> Mapping[str, Any]:
-    return json.loads(Path(config_path).read_text(encoding="utf-8"))
+    return validate_config(json.loads(Path(config_path).read_text(encoding="utf-8")))
+
+
+def _config_bool(config: Mapping[str, Any], key: str, default: bool) -> bool:
+    value = config.get(key, default)
+    return parse_bool(value)
+
+
+def log_dry_run_event(action: str, task_id: str) -> None:
+    print(
+        json.dumps(
+            {"event": "dry_run_blocked", "action": action, "task_id": task_id},
+            sort_keys=True,
+        )
+    )
 
 
 def run_pipeline(
@@ -35,9 +50,14 @@ def run_pipeline(
 ) -> dict[str, Any]:
     task = taskspec if isinstance(taskspec, TaskSpec) else load_taskspec(taskspec)
     config = _load_config(config_path)
-    adapter = OrchestratorAdapter(enabled=bool(config.get("orchestrator_enabled")))
+    adapter = OrchestratorAdapter(
+        enabled=_config_bool(config, "orchestrator_enabled", False)
+    )
     route = adapter.route(task.task_id)
-    if route["status"] == "blocked" or bool(config.get("dry_run", True)):
+    dry_run = _config_bool(config, "dry_run", True)
+    if dry_run:
+        log_dry_run_event("pipeline_execution", task.task_id)
+    if route["status"] == "blocked" or dry_run:
         return {
             "status": "blocked",
             "task_id": task.task_id,

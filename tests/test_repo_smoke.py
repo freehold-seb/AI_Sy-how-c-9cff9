@@ -38,7 +38,19 @@ def test_verifier_rejects_missing_output():
 def test_pipeline_selects_best_candidate_when_explicitly_enabled(tmp_path):
     config_path = tmp_path / "agent_config.json"
     config_path.write_text(
-        json.dumps({"orchestrator_enabled": True, "dry_run": False}),
+        json.dumps(
+            {
+                "api_key": "",
+                "model": "qwen3:8b",
+                "max_history_turns": 30,
+                "dry_run": False,
+                "admin_timeout_minutes": 60,
+                "admin_require_confirmation": True,
+                "downloads_dir": "",
+                "media_output_dir": "",
+                "orchestrator_enabled": True,
+            }
+        ),
         encoding="utf-8",
     )
 

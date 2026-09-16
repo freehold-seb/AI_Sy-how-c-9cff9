@@ -22,7 +22,7 @@ No task below may skip ahead of this sequence.
 Tasks are ordered by dependency. Pull from the top. One task per session.
 Nothing moves to done without runtime output as proof.
 
-- [ ] 1. Scan a fixture directory and return a file list
+- [x] 1. Scan a fixture directory and return a file list
         FIXTURE ONLY — script prints file names and extensions, no moves
 - [ ] 2. Classify scanned files by extension into named buckets
         FIXTURE ONLY — output maps each file to a category (image, doc, audio, etc.)

@@ -9,6 +9,7 @@ from scripts.file_organizer import (
     classify_scanned_files,
     load_schema,
     main,
+    plan_moves,
     scan_fixture_directory,
 )
 
@@ -91,3 +92,56 @@ def test_load_schema_rejects_blank_folder_name(tmp_path):
 def test_schema_path_points_at_committed_schema_file():
     assert SCHEMA_PATH.name == "file_organizer_schema.json"
     assert SCHEMA_PATH.is_file()
+
+
+def test_plan_moves_maps_classified_files_to_schema_destinations():
+    classified_files = classify_scanned_files(scan_fixture_directory(FIXTURE_DIRECTORY))
+    planned_moves = plan_moves(classified_files, load_schema(), FIXTURE_DIRECTORY)
+
+    assert planned_moves == [
+        {
+            "name": "notes.txt",
+            "category": "document",
+            "source": FIXTURE_DIRECTORY.resolve() / "notes.txt",
+            "destination": FIXTURE_DIRECTORY.resolve() / "Documents" / "notes.txt",
+        },
+        {
+            "name": "photo.JPG",
+            "category": "image",
+            "source": FIXTURE_DIRECTORY.resolve() / "photo.JPG",
+            "destination": FIXTURE_DIRECTORY.resolve() / "Images" / "photo.JPG",
+        },
+        {
+            "name": "README",
+            "category": "unknown",
+            "source": FIXTURE_DIRECTORY.resolve() / "README",
+            "destination": FIXTURE_DIRECTORY.resolve() / "unsorted" / "README",
+        },
+        {
+            "name": "song.MP3",
+            "category": "audio",
+            "source": FIXTURE_DIRECTORY.resolve() / "song.MP3",
+            "destination": FIXTURE_DIRECTORY.resolve() / "Audio" / "song.MP3",
+        },
+    ]
+
+
+def test_main_dry_run_prints_planned_moves(capsys):
+    assert main([str(FIXTURE_DIRECTORY), "--dry-run"]) == 0
+
+    assert capsys.readouterr().out.splitlines() == [
+        "notes.txt -> Documents\\notes.txt",
+        "photo.JPG -> Images\\photo.JPG",
+        "README -> unsorted\\README",
+        "song.MP3 -> Audio\\song.MP3",
+    ]
+
+
+def test_main_dry_run_does_not_modify_fixture_directory(capsys):
+    before = sorted(path.relative_to(FIXTURE_DIRECTORY) for path in FIXTURE_DIRECTORY.rglob("*"))
+
+    assert main([str(FIXTURE_DIRECTORY), "--dry-run"]) == 0
+
+    capsys.readouterr()
+    after = sorted(path.relative_to(FIXTURE_DIRECTORY) for path in FIXTURE_DIRECTORY.rglob("*"))
+    assert after == before

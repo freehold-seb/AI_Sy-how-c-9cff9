@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Sequence, TypedDict
 
@@ -42,6 +43,13 @@ class ScannedFile(TypedDict):
 
 class ClassifiedFile(ScannedFile):
     category: str
+
+
+class PlannedMove(TypedDict):
+    name: str
+    category: str
+    source: Path
+    destination: Path
 
 
 KNOWN_CATEGORIES = frozenset(EXTENSION_CATEGORIES.values()) | {"unknown"}
@@ -97,15 +105,45 @@ def load_schema(path: Path = SCHEMA_PATH) -> dict[str, str]:
     return schema
 
 
+def plan_moves(
+    files: Sequence[ClassifiedFile],
+    schema: Mapping[str, str],
+    source_directory: Path,
+) -> list[PlannedMove]:
+    """Compute planned fixture moves without touching the filesystem."""
+    source = source_directory.resolve()
+    return [
+        {
+            "name": entry["name"],
+            "category": entry["category"],
+            "source": source / entry["name"],
+            "destination": source / schema[entry["category"]].strip() / entry["name"],
+        }
+        for entry in files
+    ]
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="List and classify files in a disposable fixture directory"
     )
     parser.add_argument("directory", type=Path)
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print planned moves without creating directories or moving files",
+    )
     args = parser.parse_args(argv)
 
     scanned_files = scan_fixture_directory(args.directory)
-    for entry in classify_scanned_files(scanned_files):
+    classified_files = classify_scanned_files(scanned_files)
+    if args.dry_run:
+        schema = load_schema()
+        for move in plan_moves(classified_files, schema, args.directory):
+            print(f"{move['name']} -> {move['destination'].relative_to(args.directory.resolve())}")
+        return 0
+
+    for entry in classified_files:
         extension = entry["extension"] or "<none>"
         print(f"{entry['name']}\t{extension}\t{entry['category']}")
     return 0

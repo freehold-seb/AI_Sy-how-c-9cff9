@@ -3,14 +3,15 @@
 **Date:** 2026-09-17
 **Branch:** `do-the-next-5-most`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** `schema.json` change is uncommitted; prior work is committed at HEAD
+**Status:** Dry-run gate changes are implemented and validated in the working tree
 
 ## Verified repository state
 
-- HEAD: `b7b8675` - `Add read-only PC assessment workflow and file-organizer classification`
-- Branch matches `origin/do-the-next-5-most` as of the last push check
-- Full test suite (2026-09-17, using a repo-local `--basetemp`): `106 passed`
-  (101 prior + 5 new schema-loader tests)
+- HEAD: `49abbd5` - `Define file organizer folder schema (tasks.md gate 3)`
+- Branch is ahead of `origin/do-the-next-5-most` by two local commits before
+  the dry-run working-tree changes
+- Full test suite (2026-09-17, using a repo-local `--basetemp`): `109 passed`
+  (101 prior + 5 schema-loader tests + 3 dry-run tests)
 - The sandbox's default pytest temp path
   (`AppData\Local\Packages\sandbox.*\AC\Temp`) is still denied; use
   `--basetemp <repo>\.tmp\pytest` (create the parent directory first) until
@@ -42,7 +43,11 @@
    category (document, image, audio, unknown) to a target folder name, with a
    validating `load_schema()` loader (rejects missing/unknown categories and
    blank folder names). Closes `tasks.md` backlog item 3.
-10. Fixture-tested Windows PC assessment foundation with exact PowerShell
+10. Fixture-only dry-run planning for file organization. `plan_moves()` maps
+   classified fixture files through the schema to source/destination records,
+   and `--dry-run` prints planned moves without creating folders, writing logs,
+   or moving files. Closes Gate 1 and `tasks.md` backlog item 4.
+11. Fixture-tested Windows PC assessment foundation with exact PowerShell
   allowlisting, bounded execution, preview-by-default behavior, per-invocation
   confirmation, structured failure states, redaction, and Local AppData report
   generation. Coverage includes system, update, security, driver, storage,
@@ -55,10 +60,10 @@
 - Routing remains descriptive: static routes exist, but there is no conditional
   routing or route selection.
 - Introspection is standalone and not wired into pipeline return values.
-- File organizer backlog gate 1 (dry-run) is still open. Items 4-10 in
-  `tasks.md` (dry-run, conflict handling, execution, logging, post-move
-  validation, confirmation gate, speech input) remain pending, in order.
-  Only item 3 (schema definition) closed today.
+- File organizer backlog Gate 1 (dry-run) is closed by runtime proof:
+  `python scripts\file_organizer.py tests\fixtures\file_organizer_scan --dry-run`
+  printed planned moves for documents, images, audio, and unknown files without
+  moving anything. Items 5-10 in `tasks.md` remain pending, in order.
 - PC assessment preview was verified for the seven-day local-time window.
   The workflow remains read-only and does not authorize elevation, updates,
   uninstalls, network changes, firmware actions, cloud traversal, or file
@@ -74,10 +79,12 @@
   previously reported non-OK devices as independently verified by this
   session; a further sandbox policy change permitting `Get-CimInstance` is
   required before that verification can run.
-- Assessment fixture tests: `17 passed`; repository smoke tests: `5 passed`.
+- Assessment fixture tests: `17 passed`; repository smoke tests: `5 passed`;
+  file-organizer tests: `12 passed`.
 - All 10 allowlisted PowerShell command strings passed parser-only validation
   without executing their system queries.
-- No new commit or tag was created.
+- No commit or tag has been created yet for the dry-run Gate 1 working-tree
+  changes.
 
 ## Local-only setup
 

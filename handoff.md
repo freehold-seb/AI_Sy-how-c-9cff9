@@ -3,13 +3,15 @@
 **Date:** 2026-09-17
 **Branch:** `do-the-next-5-most`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Hardware-baseline fallback script is uncommitted; three local commits are ahead of origin
+**Status:** Hardware-baseline fallback script is committed at `9d018bb`; branch is ahead of origin by four local commits
 
 ## Verified repository state
 
-- HEAD: `40653b5` - `Add fixture-only dry-run planning for file organizer`
-- Branch is ahead of `origin/do-the-next-5-most` by three local commits before
-  the hardware-baseline fallback working-tree changes
+- HEAD: `9d018bb` - `Add hardware baseline fallback for sandboxed CIM access`
+- Branch is ahead of `origin/do-the-next-5-most` by four local commits
+  (`b7b8675`, `49abbd5`, `40653b5`, `9d018bb`), confirmed via
+  `git rev-list --count origin/do-the-next-5-most..HEAD` = 4; working tree is
+  clean (`git status --short` empty)
 - Full test suite (2026-09-17, using a repo-local `--basetemp`): `109 passed`
   (101 prior + 5 schema-loader tests + 3 dry-run tests)
 - The sandbox's default pytest temp path
@@ -92,8 +94,8 @@
   file-organizer tests: `12 passed`.
 - All 10 allowlisted PowerShell command strings passed parser-only validation
   without executing their system queries.
-- No commit or tag has been created yet for the hardware-baseline fallback
-  working-tree changes.
+- The hardware-baseline fallback is committed at `9d018bb`; no tag has been
+  created for it.
 
 ## Local-only setup
 

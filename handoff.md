@@ -3,13 +3,13 @@
 **Date:** 2026-09-17
 **Branch:** `do-the-next-5-most`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Dry-run gate changes are implemented and validated in the working tree
+**Status:** Hardware-baseline fallback script is uncommitted; three local commits are ahead of origin
 
 ## Verified repository state
 
-- HEAD: `49abbd5` - `Define file organizer folder schema (tasks.md gate 3)`
-- Branch is ahead of `origin/do-the-next-5-most` by two local commits before
-  the dry-run working-tree changes
+- HEAD: `40653b5` - `Add fixture-only dry-run planning for file organizer`
+- Branch is ahead of `origin/do-the-next-5-most` by three local commits before
+  the hardware-baseline fallback working-tree changes
 - Full test suite (2026-09-17, using a repo-local `--basetemp`): `109 passed`
   (101 prior + 5 schema-loader tests + 3 dry-run tests)
 - The sandbox's default pytest temp path
@@ -47,7 +47,12 @@
    classified fixture files through the schema to source/destination records,
    and `--dry-run` prints planned moves without creating folders, writing logs,
    or moving files. Closes Gate 1 and `tasks.md` backlog item 4.
-11. Fixture-tested Windows PC assessment foundation with exact PowerShell
+11. Read-only `scripts/system/hardware_baseline.ps1` fallback for running
+   hardware checks from a normal PowerShell session when the Copilot sandbox
+   denies CIM/WMI provider access. It prints computer, memory, CPU,
+   motherboard, BIOS, present non-OK device, and last-24-hour WHEA metadata and
+   does not change system state.
+12. Fixture-tested Windows PC assessment foundation with exact PowerShell
   allowlisting, bounded execution, preview-by-default behavior, per-invocation
   confirmation, structured failure states, redaction, and Local AppData report
   generation. Coverage includes system, update, security, driver, storage,
@@ -79,12 +84,16 @@
   previously reported non-OK devices as independently verified by this
   session; a further sandbox policy change permitting `Get-CimInstance` is
   required before that verification can run.
+- Workaround for the same blocker: run
+  `powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\scripts\system\hardware_baseline.ps1`
+  from a normal PowerShell terminal outside the sandbox, then paste the output
+  back into the session for interpretation.
 - Assessment fixture tests: `17 passed`; repository smoke tests: `5 passed`;
   file-organizer tests: `12 passed`.
 - All 10 allowlisted PowerShell command strings passed parser-only validation
   without executing their system queries.
-- No commit or tag has been created yet for the dry-run Gate 1 working-tree
-  changes.
+- No commit or tag has been created yet for the hardware-baseline fallback
+  working-tree changes.
 
 ## Local-only setup
 

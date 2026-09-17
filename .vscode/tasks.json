@@ -184,6 +184,30 @@
       "problemMatcher": []
     },
     {
+      "label": "Hardware Baseline Snapshot",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/system/hardware_baseline.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "OCHRE Bridge",
       "type": "process",
       "command": "python",

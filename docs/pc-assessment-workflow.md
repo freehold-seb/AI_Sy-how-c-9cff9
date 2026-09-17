@@ -68,6 +68,19 @@ Reports are redacted and written outside Git beneath
 addresses, and MAC addresses are removed. Failed, denied, and unavailable
 sources remain visible as evidence gaps rather than being treated as healthy.
 
+## Hardware baseline fallback
+
+If the Copilot agent sandbox denies Windows CIM/WMI access, run the read-only
+hardware snapshot from a normal PowerShell session outside the sandbox:
+
+```powershell
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\scripts\system\hardware_baseline.ps1
+```
+
+The script prints computer, memory, CPU, motherboard, BIOS, present non-OK
+device, and last-24-hour WHEA event metadata. It does not change firmware,
+drivers, devices, clocks, voltages, files, or Windows settings.
+
 ## Verification
 
 ```powershell

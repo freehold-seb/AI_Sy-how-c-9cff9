@@ -1,69 +1,108 @@
-# Kepler / AI_Sy-do-th-126fe — Handoff
+# AI System / AI_Sy-do-th-126fe - Handoff
 
-**Date:** 2026-09-16
-**Time:** 09:34 EDT
-**Branch:** do-the-next-5-most
-**Status:** LOCKED — baseline proven by live output
+**Date:** 2026-09-17
+**Branch:** `do-the-next-5-most`
+**Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
+**Status:** Local implementation changes are uncommitted
 
----
+## Verified repository state
 
-## Proven baseline (do not assume, do not skip)
+- HEAD: `eea589d` - `Add introspection routing and candidate hooks`
+- Branch matches `origin/do-the-next-5-most`
+- Full test suite (2026-09-17, using a repo-local `--basetemp`): `101 passed`
+- The sandbox's default pytest temp path
+  (`AppData\Local\Packages\sandbox.*\AC\Temp`) is still denied; use
+  `--basetemp <repo>\.tmp\pytest` (or another writable, git-ignored path)
+  until that default is allowed.
+- Python compilation (2026-09-17): passed
+- JSON parsing: 23 files parsed
+- `git diff --check` (2026-09-17): passed
+- Workspace diagnostics: no errors in touched files
 
-| Check | Command | Observed result |
-| --- | --- | --- |
-| Working tree | `git status --short` | Clean — 0 modified, 0 untracked |
-| Branch sync | `rev-list --left-right HEAD...origin/do-the-next-5-most` | `0 0` |
-| Smoke tests | `pytest -q tests/test_repo_smoke.py` | `5 passed in 0.03s` |
-| agent.py | `python core\agent.py` | `AI workspace runtime ready at …\AI_Sy-do-th-126fe` |
-| control_panel.py | `python core\control_panel.py` | `Control panel ready at …\AI_Sy-do-th-126fe` |
-| queue_worker.py | `python services\queue_worker.py` | Clean exit, no error |
+## Baseline and tags
 
----
+- Golden baseline tag: `golden-baseline-hardened-pipeline`
+- Tag target: `5fdb9e4` - `Harden pipeline with schema validation and dry-run isolation`
+- Baseline documentation: [BASELINE.md](BASELINE.md)
 
-## Reusable preflight (run at the start of every session)
+## Delivered slices
+
+1. Config schema validation and strict boolean parsing.
+2. Verifier decision logging and finite-score validation.
+3. TaskSpec schema enforcement.
+4. Dry-run isolation at the pipeline boundary.
+5. Read-only pipeline introspection collector.
+6. Additive static routing expansion with preserved status/reason semantics.
+7. Explicit-registry `CandidateHookRunner` with ordering, failure recovery,
+   dry-run suppression, score bounds, and introspection events.
+8. Fixture-only extension classification for document, image, audio, and
+   unknown files, with CLI output and no filesystem mutations.
+9. Fixture-tested Windows PC assessment foundation with exact PowerShell
+  allowlisting, bounded execution, preview-by-default behavior, per-invocation
+  confirmation, structured failure states, redaction, and Local AppData report
+  generation. Coverage includes system, update, security, driver, storage,
+  network, software, startup, developer-tool, and reliability metadata.
+
+## Current boundaries
+
+- Candidate hooks are implemented and tested, but not integrated into
+  `run_pipeline`.
+- Routing remains descriptive: static routes exist, but there is no conditional
+  routing or route selection.
+- Introspection is standalone and not wired into pipeline return values.
+- PC assessment preview was verified for the seven-day local-time window.
+  The workflow remains read-only and does not authorize elevation, updates,
+  uninstalls, network changes, firmware actions, cloud traversal, or file
+  moves.
+- A live read-only assessment and a firmware memory-profile change were
+  discussed on 2026-09-17. The user reports 48 GB of memory and that the
+  firmware settings are now applied. This session did not change firmware.
+- Current live hardware verification is still blocked by the VS Code sandbox:
+  Windows CIM/WMI queries (`Get-CimInstance`) return access-denied errors even
+  after the 2026-09-17 policy update that fixed pytest's temp-directory
+  access. No supported memory or CPU stability-test executable was found on
+  `PATH`. Do not treat memory speed, temperatures, WHEA state, or the two
+  previously reported non-OK devices as independently verified by this
+  session; a further sandbox policy change permitting `Get-CimInstance` is
+  required before that verification can run.
+- Assessment fixture tests: `17 passed`; repository smoke tests: `5 passed`.
+- All 10 allowlisted PowerShell command strings passed parser-only validation
+  without executing their system queries.
+- No new commit or tag was created.
+
+## Local-only setup
+
+- Serena is installed as `Serena 1.7.0`.
+- Serena MCP setup is preserved in local stash `Serena setup kept separate from
+  hardened baseline` and is intentionally not part of the repository commits.
+- Generated `.serena/` metadata is locally ignored.
+
+## Next repository: freehold-web
+
+This worktree is not `freehold-web`. Do not merge PR #10 or change web-repo
+files from here. The canonical local folder is:
+
+`C:\Users\SEB\kepler\repositories\freehold-web`
+
+Its remote is `https://github.com/freehold-seb/freehold-web.git`. Its current
+state was preflighted on 2026-09-16: clean working tree, branch `main`, four
+commits behind `origin/main`, with several locked worktrees all at the same
+older commit. Open that folder separately, then inspect the remote PR state
+before acting on PR #10. The supplied PR summary says it is docs-only and
+likely safe, but that summary has not been independently verified here.
+
+## Resume commands
 
 ```powershell
-$wt = "C:\Users\SEB\kepler\worktrees\AI_Sy-do-th-126fe"
-Write-Host '--- git ---'
-git -C $wt status --short --branch
-git -C $wt rev-list --left-right --count HEAD...origin/do-the-next-5-most
-Write-Host '--- pytest ---'
-python -m pytest -q $wt\tests\test_repo_smoke.py
-Write-Host '--- entrypoints ---'
-python $wt\core\agent.py
-python $wt\core\control_panel.py
-python $wt\services\queue_worker.py
+git status --short --branch
+git log -2 --oneline --decorate
+python -m pytest -q
 ```
 
-Pass criteria — all four must be true:
+For the next repo, use its own folder and run:
 
-1. `git status` → no modified or untracked files
-2. `rev-list` → `0 0`
-3. `pytest` → N passed, zero failures
-4. All three entrypoints → expected ready message or clean exit
-
-If any single line deviates: stop, fix that one thing, re-run. Do not continue past a failure.
-
----
-
-## Scope boundary
-
-**Proven:** repo is importable, bootstrap paths are operational, branch is in sync.
-
-**Not proven:** orchestration, external integrations, feature completeness.
-
----
-
-## Session rules
-
-- Run preflight before touching anything
-- One label per bridge pass (`TRANSLATE` or `SAUCE`, not both)
-- One friction point per pass — note it, stop
-- No new repo work until the current pass is closed and recorded
-- Documents and plans are not proof — only runtime output counts
-
----
-
-## Next action
-
-Run one bridge pass. One label. One transcript. Evaluate the output. Record one friction point. Stop.
+```powershell
+git status --short --branch
+git remote -v
+git log -3 --oneline --decorate
+```

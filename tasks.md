@@ -24,7 +24,7 @@ Nothing moves to done without runtime output as proof.
 
 - [x] 1. Scan a fixture directory and return a file list
         FIXTURE ONLY — script prints file names and extensions, no moves
-- [ ] 2. Classify scanned files by extension into named buckets
+- [x] 2. Classify scanned files by extension into named buckets
         FIXTURE ONLY — output maps each file to a category (image, doc, audio, etc.)
 - [ ] 3. Define and write the folder schema
         Produce `schema.json` — maps each category to a target folder name

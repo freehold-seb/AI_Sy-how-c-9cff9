@@ -142,6 +142,48 @@
       "problemMatcher": []
     },
     {
+      "label": "Test PC Assessment Fixtures",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "-m",
+        "pytest",
+        "tests/test_pc_assessment.py",
+        "-q"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Preview PC Assessment",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/scripts/system/pc_assessment.py",
+        "--preview"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "OCHRE Bridge",
       "type": "process",
       "command": "python",

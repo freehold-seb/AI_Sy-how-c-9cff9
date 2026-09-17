@@ -3,17 +3,18 @@
 **Date:** 2026-09-17
 **Branch:** `do-the-next-5-most`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Local implementation changes are uncommitted
+**Status:** `schema.json` change is uncommitted; prior work is committed at HEAD
 
 ## Verified repository state
 
-- HEAD: `eea589d` - `Add introspection routing and candidate hooks`
-- Branch matches `origin/do-the-next-5-most`
-- Full test suite (2026-09-17, using a repo-local `--basetemp`): `101 passed`
+- HEAD: `b7b8675` - `Add read-only PC assessment workflow and file-organizer classification`
+- Branch matches `origin/do-the-next-5-most` as of the last push check
+- Full test suite (2026-09-17, using a repo-local `--basetemp`): `106 passed`
+  (101 prior + 5 new schema-loader tests)
 - The sandbox's default pytest temp path
   (`AppData\Local\Packages\sandbox.*\AC\Temp`) is still denied; use
-  `--basetemp <repo>\.tmp\pytest` (or another writable, git-ignored path)
-  until that default is allowed.
+  `--basetemp <repo>\.tmp\pytest` (create the parent directory first) until
+  that default is allowed.
 - Python compilation (2026-09-17): passed
 - JSON parsing: 23 files parsed
 - `git diff --check` (2026-09-17): passed
@@ -37,7 +38,11 @@
    dry-run suppression, score bounds, and introspection events.
 8. Fixture-only extension classification for document, image, audio, and
    unknown files, with CLI output and no filesystem mutations.
-9. Fixture-tested Windows PC assessment foundation with exact PowerShell
+9. `scripts/file_organizer_schema.json` folder schema mapping every known
+   category (document, image, audio, unknown) to a target folder name, with a
+   validating `load_schema()` loader (rejects missing/unknown categories and
+   blank folder names). Closes `tasks.md` backlog item 3.
+10. Fixture-tested Windows PC assessment foundation with exact PowerShell
   allowlisting, bounded execution, preview-by-default behavior, per-invocation
   confirmation, structured failure states, redaction, and Local AppData report
   generation. Coverage includes system, update, security, driver, storage,
@@ -50,6 +55,10 @@
 - Routing remains descriptive: static routes exist, but there is no conditional
   routing or route selection.
 - Introspection is standalone and not wired into pipeline return values.
+- File organizer backlog gate 1 (dry-run) is still open. Items 4-10 in
+  `tasks.md` (dry-run, conflict handling, execution, logging, post-move
+  validation, confirmation gate, speech input) remain pending, in order.
+  Only item 3 (schema definition) closed today.
 - PC assessment preview was verified for the seven-day local-time window.
   The workflow remains read-only and does not authorize elevation, updates,
   uninstalls, network changes, firmware actions, cloud traversal, or file

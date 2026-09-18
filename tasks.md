@@ -83,8 +83,12 @@ Nothing moves to done without runtime output as proof.
         execution without confirmation and successful execution with the exact
         phrase.
         GATE 4 closes here — real directories may now be considered
-- [ ] 10. Connect speech input to a file organization command
-        Spoken phrase triggers dry-run only; transcript confirms intent before execution
+- [x] 10. Connect speech input to a file organization command
+        Spoken/transcript input triggers fixture-only dry-run previews through
+        `scripts/speech_file_organizer.py`; transcript execution requests and
+        spoken confirmation phrases are blocked and cannot call the real move
+        path. Runtime proof: organizer + speech tests passed with 22 tests, and
+        repository smoke tests passed with 5 tests.
 
 ---
 

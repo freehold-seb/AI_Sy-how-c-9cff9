@@ -1,9 +1,9 @@
 # Kepler Recovery System - Handoff
 
 **Date:** 2026-09-18
-**Branch:** `recovery/kepler-baseline-and-safety`
+**Branch:** `freehold-seb-speech-dry-run-organizer`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Hardware-baseline fallback script is committed at `9d018bb`; Gate 2/3/4 organizer and hardware-diagnostics changes are uncommitted
+**Status:** Speech/transcript-to-organizer dry-run slice is ready for PR; all file moves still require the separate explicit confirmation gate
 
 ## Naming
 
@@ -39,10 +39,13 @@ default/classification/dry-run path moves files. Focused organizer tests passed
 (`17 passed`), the full suite passed (`115 passed`), and the committed fixture
 dry-run remained unchanged.
 
-The next active task is backlog item 10: connect speech input to a dry-run-only
-file organization command. The Gate 2/3/4 slice is not committed; the current
-working-tree changes are intentional and must remain distinguishable from the
-committed hardware-baseline fallback.
+Backlog item 10 is complete in this slice: `scripts/speech_file_organizer.py`
+accepts a clipboard or explicit transcript, requires organizer preview intent,
+and delegates only to `scripts\file_organizer.py --dry-run`. Transcript attempts
+to execute moves or provide the exact move confirmation phrase are blocked
+before organizer dispatch, leaving real execution available only through the
+existing `scripts\file_organizer.py --execute --confirm "I APPROVE FILE MOVES"`
+gate.
 
 ## Verified repository state
 
@@ -91,12 +94,17 @@ committed hardware-baseline fallback.
    classified fixture files through the schema to source/destination records,
    and `--dry-run` prints planned moves without creating folders, writing logs,
    or moving files. Closes Gate 1 and `tasks.md` backlog item 4.
-11. Read-only `scripts/system/hardware_baseline.ps1` fallback for running
+11. Speech/transcript bridge for fixture organizer previews.
+   `scripts/speech_file_organizer.py` parses speech transcripts from an
+   explicit argument or clipboard, runs dry-run previews only, and blocks
+   transcript attempts to execute moves or supply confirmation phrases. Closes
+   `tasks.md` backlog item 10.
+12. Read-only `scripts/system/hardware_baseline.ps1` fallback for running
    hardware checks from a normal PowerShell session when the Copilot sandbox
    denies CIM/WMI provider access. It prints computer, memory, CPU,
    motherboard, BIOS, present non-OK device, and last-24-hour WHEA metadata and
    does not change system state.
-12. Fixture-tested Windows PC assessment foundation with exact PowerShell
+13. Fixture-tested Windows PC assessment foundation with exact PowerShell
   allowlisting, bounded execution, preview-by-default behavior, per-invocation
   confirmation, structured failure states, redaction, and Local AppData report
   generation. Coverage includes system, update, security, driver, storage,
@@ -115,8 +123,9 @@ committed hardware-baseline fallback.
   `python scripts\file_organizer.py tests\fixtures\file_organizer_scan --dry-run`
   printed planned moves for documents, images, audio, and unknown files without
   moving anything; focused organizer tests passed with 17 tests and the full
-  suite passed with 115 tests. Only backlog item 10 remains pending in this
-  sequence.
+  suite passed with 115 tests. Backlog item 10 is now complete: speech/transcript
+  input can trigger only fixture dry-run previews, and transcript execution
+  requests are blocked before the real move path.
 - PC assessment preview was verified for the seven-day local-time window.
   The workflow remains read-only and does not authorize elevation, updates,
   uninstalls, network changes, firmware actions, cloud traversal, or file

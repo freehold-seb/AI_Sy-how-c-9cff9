@@ -1,26 +1,68 @@
-# AI System / AI_Sy-do-th-126fe - Handoff
+# Kepler Recovery System - Handoff
 
-**Date:** 2026-09-17
-**Branch:** `do-the-next-5-most`
+**Date:** 2026-09-18
+**Branch:** `recovery/kepler-baseline-and-safety`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Hardware-baseline fallback script is committed at `9d018bb`; branch is ahead of origin by four local commits
+**Status:** Hardware-baseline fallback script is committed at `9d018bb`; Gate 2/3/4 organizer and hardware-diagnostics changes are uncommitted
+
+## Naming
+
+This worktree is the **Kepler Recovery System**. The active local branch is
+`recovery/kepler-baseline-and-safety`. The old remote branch
+`origin/do-the-next-5-most` and the locked sibling worktree branches were left
+unchanged; rename or deletion of those requires a separate repository review.
+
+## Current session queue
+
+The next priorities are hardware evidence and stability, reversible tuning
+records, fixture-only file-organizer safety gates, daily briefing delivery, and
+independent repository coordination. This recovery worktree must not modify
+`freehold-web`; its status must be checked from its canonical checkout instead.
+
+The current uncommitted hardware-diagnostics slice adds a read-only assessment
+category for CPU clocks, memory configuration, GPU and BIOS metadata, present
+non-OK devices, and bounded WHEA events. Its focused tests and full suite have
+passed in this session; the changes remain uncommitted.
+
+File-organizer Gate 2 is complete in the current uncommitted slice:
+conflicts are detected during fixture planning, routed to `unsorted/`, and
+labelled in dry-run output without filesystem mutation. Focused organizer tests
+passed (`14 passed`), and the normal fixture dry-run output remains unchanged.
+
+File-organizer Gate 3 is complete as well: fixture-only `--execute` moves
+planned files, writes `move_log.txt`, and validates that every source was moved
+to its planned destination.
+
+File-organizer Gate 4 is complete in the same uncommitted slice: fixture-only
+`--execute` exits 2 unless the exact confirmation phrase is supplied, and no
+default/classification/dry-run path moves files. Focused organizer tests passed
+(`17 passed`), the full suite passed (`115 passed`), and the committed fixture
+dry-run remained unchanged.
+
+The next active task is backlog item 10: connect speech input to a dry-run-only
+file organization command. The Gate 2/3/4 slice is not committed; the current
+working-tree changes are intentional and must remain distinguishable from the
+committed hardware-baseline fallback.
 
 ## Verified repository state
 
 - HEAD: `9d018bb` - `Add hardware baseline fallback for sandboxed CIM access`
-- Branch is ahead of `origin/do-the-next-5-most` by four local commits
+- The local branch was renamed from `do-the-next-5-most`; its previous remote
+  tracking branch is `origin/do-the-next-5-most`.
+- The branch is ahead of `origin/do-the-next-5-most` by four local commits
   (`b7b8675`, `49abbd5`, `40653b5`, `9d018bb`), confirmed via
-  `git rev-list --count origin/do-the-next-5-most..HEAD` = 4; working tree is
-  clean (`git status --short` empty)
-- Full test suite (2026-09-17, using a repo-local `--basetemp`): `109 passed`
-  (101 prior + 5 schema-loader tests + 3 dry-run tests)
+  `git rev-list --count origin/do-the-next-5-most..HEAD` = 4; working tree has
+  the intentional uncommitted Gate 2/3/4 and hardware-diagnostics changes listed
+  above.
+- Full test suite (2026-09-18): `115 passed`; file-organizer focused tests:
+  `17 passed`; PC-assessment focused tests: `18 passed`.
 - The sandbox's default pytest temp path
   (`AppData\Local\Packages\sandbox.*\AC\Temp`) is still denied; use
   `--basetemp <repo>\.tmp\pytest` (create the parent directory first) until
   that default is allowed.
-- Python compilation (2026-09-17): passed
-- JSON parsing: 23 files parsed
-- `git diff --check` (2026-09-17): passed
+- Python compilation (2026-09-18): passed
+- JSON parsing: 31 files parsed with UTF-8 BOM tolerance
+- `git diff --check` (2026-09-18): passed
 - Workspace diagnostics: no errors in touched files
 
 ## Baseline and tags
@@ -67,10 +109,14 @@
 - Routing remains descriptive: static routes exist, but there is no conditional
   routing or route selection.
 - Introspection is standalone and not wired into pipeline return values.
-- File organizer backlog Gate 1 (dry-run) is closed by runtime proof:
+- File organizer backlog Gate 1 (dry-run), Gate 2 (conflict handling), Gate 3
+  (fixture-only execution, logging, and post-move validation), and Gate 4
+  (explicit confirmation before execution) are closed by runtime proof:
   `python scripts\file_organizer.py tests\fixtures\file_organizer_scan --dry-run`
   printed planned moves for documents, images, audio, and unknown files without
-  moving anything. Items 5-10 in `tasks.md` remain pending, in order.
+  moving anything; focused organizer tests passed with 17 tests and the full
+  suite passed with 115 tests. Only backlog item 10 remains pending in this
+  sequence.
 - PC assessment preview was verified for the seven-day local-time window.
   The workflow remains read-only and does not authorize elevation, updates,
   uninstalls, network changes, firmware actions, cloud traversal, or file
@@ -90,9 +136,9 @@
   `powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\scripts\system\hardware_baseline.ps1`
   from a normal PowerShell terminal outside the sandbox, then paste the output
   back into the session for interpretation.
-- Assessment fixture tests: `17 passed`; repository smoke tests: `5 passed`;
-  file-organizer tests: `12 passed`.
-- All 10 allowlisted PowerShell command strings passed parser-only validation
+- Assessment fixture tests: `18 passed`; repository smoke tests: `5 passed`;
+  file-organizer tests: `17 passed`.
+- All 11 allowlisted PowerShell command strings passed parser-only validation
   without executing their system queries.
 - The hardware-baseline fallback is committed at `9d018bb`; no tag has been
   created for it.

@@ -7,10 +7,12 @@ from scripts.file_organizer import (
     KNOWN_CATEGORIES,
     SCHEMA_PATH,
     classify_scanned_files,
+    execute_moves,
     load_schema,
     main,
     plan_moves,
     scan_fixture_directory,
+    validate_moves,
 )
 
 
@@ -104,24 +106,28 @@ def test_plan_moves_maps_classified_files_to_schema_destinations():
             "category": "document",
             "source": FIXTURE_DIRECTORY.resolve() / "notes.txt",
             "destination": FIXTURE_DIRECTORY.resolve() / "Documents" / "notes.txt",
+            "conflict": False,
         },
         {
             "name": "photo.JPG",
             "category": "image",
             "source": FIXTURE_DIRECTORY.resolve() / "photo.JPG",
             "destination": FIXTURE_DIRECTORY.resolve() / "Images" / "photo.JPG",
+            "conflict": False,
         },
         {
             "name": "README",
             "category": "unknown",
             "source": FIXTURE_DIRECTORY.resolve() / "README",
             "destination": FIXTURE_DIRECTORY.resolve() / "unsorted" / "README",
+            "conflict": False,
         },
         {
             "name": "song.MP3",
             "category": "audio",
             "source": FIXTURE_DIRECTORY.resolve() / "song.MP3",
             "destination": FIXTURE_DIRECTORY.resolve() / "Audio" / "song.MP3",
+            "conflict": False,
         },
     ]
 
@@ -137,6 +143,38 @@ def test_main_dry_run_prints_planned_moves(capsys):
     ]
 
 
+def test_plan_moves_routes_existing_destination_to_unsorted(tmp_path):
+    source = tmp_path / "scan"
+    source.mkdir()
+    (source / "notes.txt").write_text("incoming", encoding="utf-8")
+    (source / "Documents").mkdir()
+    (source / "Documents" / "notes.txt").write_text("existing", encoding="utf-8")
+
+    planned = plan_moves(
+        [{"name": "notes.txt", "extension": ".txt", "category": "document"}],
+        load_schema(),
+        source,
+    )
+
+    assert planned[0]["destination"] == source / "unsorted" / "notes.txt"
+    assert planned[0]["conflict"] is True
+
+
+def test_main_dry_run_marks_existing_destination_conflict(tmp_path, capsys, monkeypatch):
+    source = tmp_path / "scan"
+    source.mkdir()
+    (source / "notes.txt").write_text("incoming", encoding="utf-8")
+    (source / "Documents").mkdir()
+    (source / "Documents" / "notes.txt").write_text("existing", encoding="utf-8")
+    monkeypatch.setattr("scripts.file_organizer.FIXTURES_ROOT", tmp_path.resolve())
+
+    assert main([str(source), "--dry-run"]) == 0
+
+    assert capsys.readouterr().out.splitlines() == [
+        "notes.txt -> unsorted\\notes.txt [CONFLICT -> unsorted]",
+    ]
+
+
 def test_main_dry_run_does_not_modify_fixture_directory(capsys):
     before = sorted(path.relative_to(FIXTURE_DIRECTORY) for path in FIXTURE_DIRECTORY.rglob("*"))
 
@@ -145,3 +183,51 @@ def test_main_dry_run_does_not_modify_fixture_directory(capsys):
     capsys.readouterr()
     after = sorted(path.relative_to(FIXTURE_DIRECTORY) for path in FIXTURE_DIRECTORY.rglob("*"))
     assert after == before
+
+
+def test_execute_moves_logs_and_validates_disposable_fixture(tmp_path, monkeypatch):
+    source = tmp_path / "scan"
+    source.mkdir()
+    (source / "notes.txt").write_text("notes", encoding="utf-8")
+    (source / "README").write_text("unknown", encoding="utf-8")
+    monkeypatch.setattr("scripts.file_organizer.FIXTURES_ROOT", tmp_path.resolve())
+    files = classify_scanned_files(scan_fixture_directory(source))
+    planned = plan_moves(files, load_schema(), source)
+
+    log_path = source / "move_log.txt"
+    log_lines = execute_moves(planned, log_path)
+    validate_moves(planned)
+
+    assert log_lines == [
+        "MOVE notes.txt -> Documents\\notes.txt",
+        "MOVE README -> unsorted\\README",
+    ]
+    assert log_path.read_text(encoding="utf-8") == "\n".join(log_lines) + "\n"
+
+
+def test_main_execute_runs_only_against_disposable_fixture(tmp_path, capsys, monkeypatch):
+    source = tmp_path / "scan"
+    source.mkdir()
+    (source / "song.mp3").write_text("audio", encoding="utf-8")
+    monkeypatch.setattr("scripts.file_organizer.FIXTURES_ROOT", tmp_path.resolve())
+
+    assert main([str(source), "--execute", "--confirm", "I APPROVE FILE MOVES"]) == 0
+
+    assert "VALIDATED post-move layout" in capsys.readouterr().out
+    assert (source / "Audio" / "song.mp3").is_file()
+    assert (source / "move_log.txt").is_file()
+
+
+def test_main_execute_requires_explicit_confirmation(tmp_path, capsys, monkeypatch):
+    source = tmp_path / "scan"
+    source.mkdir()
+    (source / "song.mp3").write_text("audio", encoding="utf-8")
+    monkeypatch.setattr("scripts.file_organizer.FIXTURES_ROOT", tmp_path.resolve())
+
+    assert main([str(source), "--execute"]) == 2
+    assert "Move blocked: pass --confirm \"I APPROVE FILE MOVES\"." in capsys.readouterr().out
+    assert (source / "song.mp3").exists()
+    assert not (source / "Audio").exists()
+
+    assert main([str(source), "--execute", "--confirm", "I APPROVE FILE MOVES"]) == 0
+    assert (source / "Audio" / "song.mp3").is_file()

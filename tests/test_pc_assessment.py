@@ -88,6 +88,7 @@ def test_allowlist_covers_approved_assessment_scope():
         "updates",
         "security",
         "drivers",
+        "hardware",
         "storage",
         "network",
         "software",
@@ -255,6 +256,25 @@ def test_report_summarizes_reliability_event_groups():
     )
 
     assert "5 warning/error event(s) across 2 top group(s)" in report
+
+
+def test_report_flags_hardware_stability_signals():
+    report = render_report(
+        [
+            CollectionResult(
+                "hardware",
+                "collected",
+                {
+                    "ProblemDevices": [{"FriendlyName": "Synthetic device"}],
+                    "WHEA": [{"Id": 18}],
+                },
+            )
+        ],
+        generated_at=datetime(2026, 9, 16, tzinfo=timezone.utc),
+    )
+
+    assert "hardware: 1 present device(s) reported a non-OK state" in report
+    assert "hardware: 1 WHEA hardware event(s)" in report
 
 
 def test_write_report_uses_explicit_test_destination(tmp_path):

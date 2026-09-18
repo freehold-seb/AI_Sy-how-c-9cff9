@@ -112,6 +112,14 @@ def _findings(results: Sequence[CollectionResult]) -> list[tuple[int, str]]:
     if unsigned:
         findings.append((1, f"drivers: {len(unsigned)} installed driver record(s) reported unsigned"))
 
+    hardware = _category_data(results, "hardware")
+    hardware_problem_devices = _items(hardware.get("ProblemDevices"))
+    if hardware_problem_devices and not problem_devices:
+        findings.append((0, f"hardware: {len(hardware_problem_devices)} present device(s) reported a non-OK state"))
+    whea_events = _items(hardware.get("WHEA"))
+    if whea_events:
+        findings.append((0, f"hardware: {len(whea_events)} WHEA hardware event(s) reported in the seven-day window"))
+
     storage = _category_data(results, "storage")
     for volume in _items(storage.get("Volumes")):
         size = volume.get("Size")
@@ -193,7 +201,7 @@ def render_report(results: Sequence[CollectionResult], *, generated_at: datetime
         "## Window and scope",
         "",
         f"- Window: {window_start.isoformat(timespec='seconds')} to {generated.isoformat(timespec='seconds')}",
-        "- Sources: approved Windows system, update, security, driver, storage, network, software, startup, developer, and reliability metadata.",
+        "- Sources: approved Windows system, update, security, driver, hardware, storage, network, software, startup, developer, and reliability metadata.",
         "- Content paths: none approved or inspected.",
         "- Exclusions: file contents, OneDrive, Google Drive traversal, browser/credential data, communications, packet capture, and all machine changes.",
         "- Baseline: first run; observations are not week-over-week deltas.",

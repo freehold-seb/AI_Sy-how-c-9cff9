@@ -21,72 +21,12 @@
       "problemMatcher": []
     },
     {
-      "label": "Prepare TRANSLATE Prompt",
+      "label": "Prepare Prompt",
       "type": "process",
       "command": "python",
       "args": [
         "${workspaceFolder}/scripts/prepare_prompt.py",
-        "TRANSLATE"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Prepare SAUCE Prompt",
-      "type": "process",
-      "command": "python",
-      "args": [
-        "${workspaceFolder}/scripts/prepare_prompt.py",
-        "SAUCE"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Prepare POLISH Prompt",
-      "type": "process",
-      "command": "python",
-      "args": [
-        "${workspaceFolder}/scripts/prepare_prompt.py",
-        "POLISH"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Prepare ELABORATE Prompt",
-      "type": "process",
-      "command": "python",
-      "args": [
-        "${workspaceFolder}/scripts/prepare_prompt.py",
-        "ELABORATE"
+        "${input:preparePromptMode}"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -159,6 +99,20 @@
         "clear": false
       },
       "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "preparePromptMode",
+      "type": "pickString",
+      "description": "Select prompt mode",
+      "options": [
+        "TRANSLATE",
+        "SAUCE",
+        "POLISH",
+        "ELABORATE"
+      ],
+      "default": "TRANSLATE"
     }
   ]
 }

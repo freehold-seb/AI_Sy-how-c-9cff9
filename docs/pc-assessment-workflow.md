@@ -23,6 +23,8 @@ The available categories are:
 - `updates`: recent Windows hotfixes and bounded update warning/error events.
 - `security`: Defender protection state and Windows Firewall profiles.
 - `drivers`: signed Plug and Play driver metadata.
+- `hardware`: CPU clocks, memory configuration, GPU and BIOS metadata, present
+  non-OK devices, and bounded WHEA event metadata for stability review.
 - `storage`: physical-disk health plus mounted volume type, capacity, and free
   space.
 - `network`: adapter/profile status, DNS, default routes, WinHTTP proxy, and up
@@ -62,6 +64,11 @@ privilege posture, and exclusions. It does not create a report.
 A future live read-only invocation must explicitly select every category and
 include the exact phrase printed by the CLI. Approval is scoped to that single
 invocation and is not stored. Review the preview immediately before running it.
+
+The fixture-only file organizer has a separate `--execute` mode for disposable
+fixtures. It creates target folders, moves planned files, writes `move_log.txt`,
+and validates the resulting layout. It is not an authorization for real user
+directories; explicit confirmation remains a separate gate.
 
 Reports are redacted and written outside Git beneath
 `%LOCALAPPDATA%\Kepler\pc-assessment\`. Usernames, hostnames, paths, IP

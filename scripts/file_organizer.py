@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Sequence, TypedDict
@@ -11,6 +12,8 @@ from typing import Sequence, TypedDict
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES_ROOT = (ROOT / "tests" / "fixtures").resolve()
 SCHEMA_PATH = Path(__file__).resolve().parent / "file_organizer_schema.json"
+MOVE_LOG_NAME = "move_log.txt"
+CONFIRMATION_PHRASE = "I APPROVE FILE MOVES"
 
 EXTENSION_CATEGORIES = {
     ".aac": "audio",
@@ -50,6 +53,7 @@ class PlannedMove(TypedDict):
     category: str
     source: Path
     destination: Path
+    conflict: bool
 
 
 KNOWN_CATEGORIES = frozenset(EXTENSION_CATEGORIES.values()) | {"unknown"}
@@ -110,17 +114,61 @@ def plan_moves(
     schema: Mapping[str, str],
     source_directory: Path,
 ) -> list[PlannedMove]:
-    """Compute planned fixture moves without touching the filesystem."""
+    """Compute planned fixture moves and route conflicts to ``unsorted``."""
     source = source_directory.resolve()
-    return [
-        {
+    unsorted = source / schema["unknown"].strip()
+    planned_destinations: set[Path] = set()
+    planned: list[PlannedMove] = []
+
+    for entry in files:
+        destination = source / schema[entry["category"]].strip() / entry["name"]
+        conflict = destination.exists() or destination in planned_destinations
+        if conflict:
+            destination = unsorted / entry["name"]
+        if destination.exists() or destination in planned_destinations:
+            raise FileExistsError(f"cannot route conflict to unsorted: {destination}")
+        planned_destinations.add(destination)
+        move: PlannedMove = {
             "name": entry["name"],
             "category": entry["category"],
             "source": source / entry["name"],
-            "destination": source / schema[entry["category"]].strip() / entry["name"],
+            "destination": destination,
+            "conflict": conflict,
         }
-        for entry in files
+        planned.append(move)
+
+    return planned
+
+
+def execute_moves(planned_moves: Sequence[PlannedMove], log_path: Path) -> list[str]:
+    """Execute already-planned fixture moves and log each result."""
+    log_lines: list[str] = []
+    for move in planned_moves:
+        source = move["source"]
+        destination = move["destination"]
+        if not source.is_file():
+            log_lines.append(f"SKIP missing {source.name}")
+            continue
+        if destination.exists():
+            log_lines.append(f"SKIP conflict {destination.relative_to(source.parent)}")
+            continue
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(source), str(destination))
+        log_lines.append(f"MOVE {source.name} -> {destination.relative_to(source.parent)}")
+
+    log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
+    return log_lines
+
+
+def validate_moves(planned_moves: Sequence[PlannedMove]) -> None:
+    """Confirm every planned source was moved to its planned destination."""
+    failures = [
+        move["name"]
+        for move in planned_moves
+        if move["source"].exists() or not move["destination"].is_file()
     ]
+    if failures:
+        raise RuntimeError(f"post-move validation failed: {', '.join(failures)}")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -133,6 +181,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="Print planned moves without creating directories or moving files",
     )
+    parser.add_argument(
+        "--execute",
+        action="store_true",
+        help="Execute planned moves inside tests/fixtures and validate the result",
+    )
+    parser.add_argument(
+        "--confirm",
+        help="Exact confirmation phrase required before any move executes",
+    )
     args = parser.parse_args(argv)
 
     scanned_files = scan_fixture_directory(args.directory)
@@ -140,7 +197,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.dry_run:
         schema = load_schema()
         for move in plan_moves(classified_files, schema, args.directory):
-            print(f"{move['name']} -> {move['destination'].relative_to(args.directory.resolve())}")
+            marker = " [CONFLICT -> unsorted]" if move["conflict"] else ""
+            print(f"{move['name']} -> {move['destination'].relative_to(args.directory.resolve())}{marker}")
+        return 0
+
+    if args.execute:
+        if args.confirm != CONFIRMATION_PHRASE:
+            print(f'Move blocked: pass --confirm "{CONFIRMATION_PHRASE}".')
+            return 2
+        schema = load_schema()
+        planned = plan_moves(classified_files, schema, args.directory)
+        log_lines = execute_moves(planned, args.directory.resolve() / MOVE_LOG_NAME)
+        validate_moves(planned)
+        for line in log_lines:
+            print(line)
+        print("VALIDATED post-move layout")
         return 0
 
     for entry in classified_files:

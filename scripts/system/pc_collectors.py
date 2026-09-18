@@ -49,6 +49,23 @@ POWERSHELL_COMMANDS: Mapping[str, str] = {
         "[pscustomobject]@{SignedDrivers=$signed;ProblemDevices=$problems} | "
         "ConvertTo-Json -Depth 4 -Compress"
     ),
+    "hardware": (
+        "$cpu=@(Get-CimInstance Win32_Processor | "
+        "Select-Object Name,NumberOfCores,NumberOfLogicalProcessors,MaxClockSpeed,CurrentClockSpeed); "
+        "$memory=@(Get-CimInstance Win32_PhysicalMemory | "
+        "Select-Object Capacity,Speed,ConfiguredClockSpeed,Manufacturer,PartNumber); "
+        "$gpu=@(Get-CimInstance Win32_VideoController | "
+        "Select-Object Name,DriverVersion,AdapterRAM); "
+        "$bios=Get-CimInstance Win32_BIOS | Select-Object Manufacturer,SMBIOSBIOSVersion,ReleaseDate; "
+        "$problems=@(Get-PnpDevice -PresentOnly -ErrorAction SilentlyContinue | "
+        "Where-Object Status -NE 'OK' | Select-Object Class,FriendlyName,Status,Problem); "
+        "$whea=@(Get-WinEvent -FilterHashtable "
+        "@{LogName='System';ProviderName='Microsoft-Windows-WHEA-Logger';"
+        "StartTime=(Get-Date).AddDays(-7)} -MaxEvents 50 -ErrorAction SilentlyContinue | "
+        "Select-Object TimeCreated,Id,LevelDisplayName); "
+        "[pscustomobject]@{CPU=$cpu;Memory=$memory;GPU=$gpu;BIOS=$bios;"
+        "ProblemDevices=$problems;WHEA=$whea} | ConvertTo-Json -Depth 4 -Compress"
+    ),
     "storage": (
         "$disks=@(Get-PhysicalDisk -ErrorAction SilentlyContinue | "
         "Select-Object FriendlyName,MediaType,BusType,HealthStatus,OperationalStatus,Size); "

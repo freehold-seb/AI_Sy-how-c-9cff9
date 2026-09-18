@@ -1,4 +1,4 @@
-# AI_Sy-do-th-126fe Agent Guide
+# Kepler Recovery System Agent Guide
 
 ## Working agreement
 

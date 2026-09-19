@@ -1,9 +1,9 @@
 # Kepler Recovery System - Handoff
 
-**Date:** 2026-09-18
+**Date:** 2026-09-19
 **Branch:** `recovery/kepler-baseline-and-safety`
 **Remote:** `git@github.com:freehold-seb/AI_Sy-how-c-9cff9.git`
-**Status:** Hardware-baseline fallback script is committed at `9d018bb`; Gate 2/3/4 organizer and hardware-diagnostics changes are uncommitted
+**Status:** Week-close validation passed; the privacy-first service direction and workflow reliability slice are ready to commit
 
 ## Naming
 
@@ -39,30 +39,48 @@ default/classification/dry-run path moves files. Focused organizer tests passed
 (`17 passed`), the full suite passed (`115 passed`), and the committed fixture
 dry-run remained unchanged.
 
-The next active task is backlog item 10: connect speech input to a dry-run-only
-file organization command. The Gate 2/3/4 slice is not committed; the current
-working-tree changes are intentional and must remain distinguishable from the
-committed hardware-baseline fallback.
+Backlog item 10, connecting speech input to a dry-run-only file organization
+command, is implemented by `scripts/voice_file_organizer.py` and remains
+fixture-only and dry-run-only. The organizer safety gates are committed at
+`177e5d2`; the voice adapter and its tests are part of the week-close slice.
+The next active work is hardware evidence, reversible tuning records, and a
+fixture-only proof of the privacy-first service concept.
+For a normal PowerShell session outside the VS Code sandbox, capture the
+read-only baseline with
+`powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\scripts\system\capture_hardware_baseline.ps1`.
+Live baseline evidence captured on 2026-09-18 from the normal PowerShell
+session: Ryzen 9 7900X at 4701 MHz current/max, 48 GiB DDR5-6000 configured,
+MSI PRO B650-S WIFI motherboard, BIOS 1.O2 dated 2026-07-05, and no WHEA
+events in the preceding 24 hours. Two present non-OK devices were reported:
+an unknown USB device with `CM_PROB_FAILED_POST_START` and a Bluetooth PAN
+device with `CM_PROB_DISABLED`. The capture did not run a memory or CPU
+stability test, so stability remains unverified.
+The service direction is documented in
+`docs/privacy-first-file-organization-service.md`. It prefers local processing,
+data minimization, dry-run review, explicit authorization, bounded retention,
+and synthetic fixtures. Customer intake, uploads, and real customer data remain
+deferred.
+
+Daily briefings remain manual. The source-file counter now excludes Git data,
+caches, virtual environments, generated reports, and vendored Forgecheck data;
+the September 19 briefing reported 136 files instead of the previous inflated
+11,000-plus count. No unattended weekend schedule was added.
 
 ## Verified repository state
 
-- HEAD: `9d018bb` - `Add hardware baseline fallback for sandboxed CIM access`
-- The local branch was renamed from `do-the-next-5-most`; its previous remote
-  tracking branch is `origin/do-the-next-5-most`.
-- The branch is ahead of `origin/do-the-next-5-most` by four local commits
-  (`b7b8675`, `49abbd5`, `40653b5`, `9d018bb`), confirmed via
-  `git rev-list --count origin/do-the-next-5-most..HEAD` = 4; working tree has
-  the intentional uncommitted Gate 2/3/4 and hardware-diagnostics changes listed
-  above.
-- Full test suite (2026-09-18): `115 passed`; file-organizer focused tests:
-  `17 passed`; PC-assessment focused tests: `18 passed`.
+- Pre-closeout HEAD: `177e5d2` - `feat: stabilize fixture organizer execution gates`
+- A September 19 fetch completed successfully. Before the closeout commit, the
+  branch matched `origin/recovery/kepler-baseline-and-safety` with no reported
+  divergence.
+- Full test suite (2026-09-19): `122 passed`; workflow focused tests: `7 passed`;
+  repository smoke tests: `5 passed`.
 - The sandbox's default pytest temp path
   (`AppData\Local\Packages\sandbox.*\AC\Temp`) is still denied; use
   `--basetemp <repo>\.tmp\pytest` (create the parent directory first) until
   that default is allowed.
-- Python compilation (2026-09-18): passed
+- Python compilation (2026-09-19): passed
 - JSON parsing: 31 files parsed with UTF-8 BOM tolerance
-- `git diff --check` (2026-09-18): passed
+- `git diff --check` (2026-09-19): passed
 - Workspace diagnostics: no errors in touched files
 
 ## Baseline and tags
@@ -114,9 +132,8 @@ committed hardware-baseline fallback.
   (explicit confirmation before execution) are closed by runtime proof:
   `python scripts\file_organizer.py tests\fixtures\file_organizer_scan --dry-run`
   printed planned moves for documents, images, audio, and unknown files without
-  moving anything; focused organizer tests passed with 17 tests and the full
-  suite passed with 115 tests. Only backlog item 10 remains pending in this
-  sequence.
+  moving anything; focused organizer tests passed with 17 tests. Backlog item
+  10 is implemented by the fixture-only, dry-run-only voice adapter.
 - PC assessment preview was verified for the seven-day local-time window.
   The workflow remains read-only and does not authorize elevation, updates,
   uninstalls, network changes, firmware actions, cloud traversal, or file

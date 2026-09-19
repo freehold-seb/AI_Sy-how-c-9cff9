@@ -36,6 +36,11 @@ python -m compileall -q agent_core core runner services verifier workflows
 git diff --check
 ```
 
+When the user asks for a smoke test or says `smoketest`, run
+`python -m pytest tests/test_repo_smoke.py -q` from the workspace root and
+report the result. Do not claim that testing tools are unavailable when the
+terminal is available.
+
 Run commands from the workspace root. Record meaningful runtime proof in [handoff.md](handoff.md) when the task changes the handoff state; otherwise leave handoff content alone.
 
 ## Specialist routing

@@ -3,11 +3,23 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "reports"
+EXCLUDED_PARTS = {
+    ".git",
+    ".pytest_cache",
+    ".tmp",
+    ".venv",
+    "__pycache__",
+    "env",
+    "reports",
+    "venv",
+}
+EXCLUDED_PREFIXES = {("forgecheck", "dependencies"), ("forgecheck", "outputs")}
 
 
 def read_json(path: Path) -> dict:
@@ -17,10 +29,23 @@ def read_json(path: Path) -> dict:
         return {}
 
 
+def workspace_files() -> list[Path]:
+    files = []
+    for path in ROOT.rglob("*"):
+        relative_parts = path.relative_to(ROOT).parts
+        if (
+            path.is_file()
+            and not EXCLUDED_PARTS.intersection(relative_parts)
+            and not any(relative_parts[: len(prefix)] == prefix for prefix in EXCLUDED_PREFIXES)
+        ):
+            files.append(path)
+    return files
+
+
 def count_files(suffix: str | None = None) -> int:
-    files = (path for path in ROOT.rglob("*") if path.is_file())
+    files = workspace_files()
     if suffix is None:
-        return sum(1 for _ in files)
+        return len(files)
     return sum(1 for path in files if path.suffix.lower() == suffix)
 
 
@@ -29,14 +54,19 @@ def recent_files() -> list[Path]:
     return sorted(
         (
             path
-            for path in ROOT.rglob("*")
-            if path.is_file()
-            and "\\.git\\" not in str(path)
-            and path.stat().st_mtime >= cutoff.timestamp()
+            for path in workspace_files()
+            if path.stat().st_mtime >= cutoff.timestamp()
         ),
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )[:10]
+
+
+def write_atomic(path: Path, content: str) -> None:
+    """Replace a briefing atomically so readers never see a partial report."""
+    temporary = path.with_name(f".{path.name}.tmp")
+    temporary.write_text(content, encoding="utf-8")
+    os.replace(temporary, path)
 
 
 def main() -> int:
@@ -104,7 +134,7 @@ def main() -> int:
 
     REPORTS.mkdir(exist_ok=True)
     output = REPORTS / f"daily-briefing-{now.date().isoformat()}.md"
-    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    write_atomic(output, "\n".join(lines) + "\n")
     print(output)
     return 0
 

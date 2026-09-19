@@ -44,6 +44,65 @@ with runtime proof before moving on.
 
 ---
 
+## Week-close queue - 2026-09-19
+
+### Complete today
+
+- [x] **1. High - Write the weekly recap.** Acceptance: accomplishments, gaps,
+        failures, decisions, and Monday's starting point are recorded in
+        `reports/weekly-recap-2026-09-19.md`.
+- [x] **2. High - Fetch the tracked remote.** Acceptance: remote references are
+        refreshed without merging or modifying local work.
+- [x] **3. High - Inspect repository divergence.** Acceptance: branch, tracking
+        state, staged files, and untracked files are known before synchronization.
+- [x] **4. High - Run the repository smoke test.** Acceptance:
+        `tests/test_repo_smoke.py` passes.
+- [x] **5. High - Validate the workflow slice.** Acceptance:
+        `tests/test_daily_workflows.py` passes using a repository-local temp path.
+- [x] **6. Medium - Correct briefing file counts.** Acceptance: generated,
+        cached, report, and vendored dependency files are excluded by a test.
+- [x] **7. High - Record the service direction.** Acceptance: a tracked document
+        defines the privacy-first, supervised file-organization service.
+- [x] **8. High - Identify service privacy risks.** Acceptance: the service
+        document covers disclosure, inspection, classification, deletion, scope,
+        retention, access, consent, legal exposure, and claims.
+- [x] **9. High - Define the fixture-only proof of concept.** Acceptance: scope,
+        inspection levels, review routing, audit output, and success criteria are
+        explicit and use synthetic fixtures only.
+- [x] **10. High - Run the complete test suite.** Acceptance: all repository tests
+        pass with a repository-local pytest temp directory.
+- [x] **11. High - Compile supported Python packages.** Acceptance: `compileall`
+        completes without errors for the supported package directories.
+- [x] **12. Medium - Validate patch formatting.** Acceptance: `git diff --check`
+        reports no whitespace errors.
+- [x] **13. High - Update the handoff.** Acceptance: the handoff records current
+        HEAD, validation evidence, remaining risks, and Monday's first action.
+- [ ] **14. High - Commit the coherent closeout slice.** Acceptance: tracked and
+        intentional new files are committed together with a descriptive message.
+- [ ] **15. High - Push and verify synchronization.** Acceptance: the branch is
+        pushed and reports no divergence from its tracked remote.
+
+### Resume Monday
+
+- [ ] **16. High - Investigate both non-OK devices.** Acceptance: each device has
+        an identified cause, impact assessment, and reversible next action.
+- [ ] **17. High - Run an approved stability check.** Acceptance: bounded memory
+        and CPU test results are captured without changing tuning settings.
+- [ ] **18. Medium - Verify Monday's manual briefing.** Acceptance: one briefing
+        is generated manually with credible source-file counts and timestamp.
+- [ ] **19. Medium - Draft the customer intake model.** Acceptance: a structured
+        draft covers allowed roots, forbidden roots, inspection depth, sensitive
+        classes, allowed actions, review, retention, deletion, and consent.
+
+### Longer-term backlog
+
+- [ ] **20. High - Produce the service threat model and data lifecycle.**
+        Acceptance: every collected artifact has a purpose, storage location,
+        access rule, retention period, deletion proof, and incident owner before
+        any real customer-data trial.
+
+---
+
 ## Backlog
 
 Tasks are ordered by dependency. Pull from the top. One task per session.
@@ -83,8 +142,9 @@ Nothing moves to done without runtime output as proof.
         execution without confirmation and successful execution with the exact
         phrase.
         GATE 4 closes here — real directories may now be considered
-- [ ] 10. Connect speech input to a file organization command
-        Spoken phrase triggers dry-run only; transcript confirms intent before execution
+- [x] 10. Connect speech input to a file organization command
+        Spoken phrase is read from the bridge clipboard; an explicit organize
+        command triggers dry-run only and cannot authorize execution.
 
 ---
 

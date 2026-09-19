@@ -30,6 +30,15 @@ raw thought -> clarify -> structure -> usable output
 4. Begin the pasted text with one mode label.
 5. Paste the clipboard contents and send.
 
+For the fixture-only file organizer path, say `organize files in
+tests/fixtures/file_organizer_scan`, then run:
+
+```powershell
+python .\scripts\voice_file_organizer.py --clipboard
+```
+
+This prints the planned moves only. Voice input cannot authorize execution.
+
 ## Mode labels
 
 ### `POLISH:`

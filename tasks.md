@@ -77,9 +77,9 @@ with runtime proof before moving on.
         reports no whitespace errors.
 - [x] **13. High - Update the handoff.** Acceptance: the handoff records current
         HEAD, validation evidence, remaining risks, and Monday's first action.
-- [ ] **14. High - Commit the coherent closeout slice.** Acceptance: tracked and
+- [x] **14. High - Commit the coherent closeout slice.** Acceptance: tracked and
         intentional new files are committed together with a descriptive message.
-- [ ] **15. High - Push and verify synchronization.** Acceptance: the branch is
+- [x] **15. High - Push and verify synchronization.** Acceptance: the branch is
         pushed and reports no divergence from its tracked remote.
 
 ### Resume Monday

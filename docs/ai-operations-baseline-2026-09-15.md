@@ -3,6 +3,10 @@
 Generated: 2026-09-15
 Scope: current recovery workspace only; project baseline for all AI agents and contributors.
 
+> Update: the "missing runner/verifier boundary" referenced below has since
+> been restored (`runner/`, `verifier/`) and is covered by
+> `tests/test_repo_smoke.py`. Kept for the historical record.
+
 ## Purpose
 
 This file exists to reduce repeated handoff copy-paste, conflicting assumptions, and multi-AI drift. It is not a runtime feature. It is the operating baseline for every AI that joins the project.

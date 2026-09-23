@@ -3,6 +3,10 @@
 Generated: 2026-09-15
 Scope: current recovery workspace only; direct reduction plan for the active working surface.
 
+> Update: the "missing runner/verifier boundary" referenced below has since
+> been restored (`runner/`, `verifier/`) and is covered by
+> `tests/test_repo_smoke.py`. Kept for the historical record.
+
 ## Working baseline
 
 These are the only items that should remain in normal use until a missing runtime boundary is restored and validated:

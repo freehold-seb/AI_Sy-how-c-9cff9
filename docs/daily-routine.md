@@ -27,7 +27,9 @@ The daily briefing answers:
 
 - The bridge transcribes; it does not add personality.
 - Refinement happens in chat through `POLISH:`, `SAUCE:`, `ELABORATE:`, or `TRANSLATE:`.
-- The briefing is read-only and limited to the current workspace.
+- The briefing only reads workspace metadata; it writes exactly one dated
+  report file per run under `reports/` and does not modify existing files.
+  Set `DAILY_BRIEFING_DRY_RUN=1` to print the report instead of writing it.
 - Generated reports are local working artifacts and are ignored by Git.
 - One improvement per day is enough.
 - Do not turn the daily briefing into an autonomous change loop.

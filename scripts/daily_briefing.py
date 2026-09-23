@@ -1,8 +1,15 @@
-"""Generate a read-only daily project briefing for the current workspace."""
+"""Generate a daily project briefing for the current workspace.
+
+This only reads workspace metadata and selected config; it does not modify
+existing files. It does write one new file per run: a dated Markdown report
+under `reports/` (created if missing). Set `DAILY_BRIEFING_DRY_RUN=1` to
+print the report to stdout instead of writing it.
+"""
 
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -102,9 +109,15 @@ def main() -> int:
         ]
     )
 
+    report = "\n".join(lines) + "\n"
+
+    if os.environ.get("DAILY_BRIEFING_DRY_RUN") == "1":
+        print(report)
+        return 0
+
     REPORTS.mkdir(exist_ok=True)
     output = REPORTS / f"daily-briefing-{now.date().isoformat()}.md"
-    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    output.write_text(report, encoding="utf-8")
     print(output)
     return 0
 

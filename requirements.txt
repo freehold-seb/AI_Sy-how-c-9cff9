@@ -1,3 +1,5 @@
+# Runtime dependencies only. For CI or running the test suite, see
+# requirements-dev.txt instead of installing this full (heavier) list.
 openai>=1.0.0
 fastapi>=0.111.0
 uvicorn>=0.30.0
@@ -7,7 +9,6 @@ Pillow>=10.0.0
 pystray>=0.19.0
 plyer>=2.1.0
 requests>=2.31.0
-pytest>=8.0.0
 numpy>=1.24.0
 faster-whisper>=1.1.0
 sounddevice>=0.5.0

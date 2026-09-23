@@ -3,6 +3,10 @@
 Generated: 2026-09-15
 Scope: current recovery workspace only; active decision for the project owner and AI lead.
 
+> Update: the runner/verifier boundary described as incomplete/missing
+> below has since been restored and is covered by
+> `tests/test_repo_smoke.py`. Kept for the historical record.
+
 ## Final decision
 
 The project is not yet autonomous because the active runtime boundary is incomplete and the repo is still a partial recovery snapshot. The correct operating posture is fail-closed, single-node, and proof-first.

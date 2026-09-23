@@ -3,6 +3,10 @@
 Generated: 2026-09-15
 Scope: current recovery workspace only; executable project plan for today.
 
+> Update: the runner/verifier boundary referenced as "missing" throughout
+> this plan has since been restored and is covered by
+> `tests/test_repo_smoke.py`. Kept for the historical record.
+
 ## Goal
 
 Create a safe, single-threaded operating baseline that reduces churn, keeps the project in a fail-closed state, and produces real progress without pretending the full autonomous system is already running.

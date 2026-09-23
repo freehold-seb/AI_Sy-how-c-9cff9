@@ -1,0 +1,14 @@
+# Test / CI dependencies only.
+#
+# The smoke test suite (tests/test_repo_smoke.py) only imports this
+# project's own modules plus the Python standard library, so this file
+# stays intentionally small. Install this instead of requirements.txt
+# when you just want to run the smoke tests or the GitHub Actions
+# smoke workflow locally:
+#
+#   pip install -r requirements-dev.txt
+#   pytest tests/test_repo_smoke.py -q
+#
+# Install requirements.txt as well only if you need the full runtime
+# (voice bridge, service, etc.).
+pytest>=8.0.0

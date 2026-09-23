@@ -23,7 +23,7 @@ This is a first-pass map of the Kepler workspace and the current recovery reposi
 - `docs/real-vs-aspirational-2026-09-15.md`: proven versus deferred work
 - `docs/minimum-viable-workflow-2026-09-15.md`: staged operating plan
 - `core/agent.py`, `core/control_panel.py`, and `services/queue_worker.py`: minimal bootstrap stubs that keep compatibility imports alive
-- `verifier/__init__.py`: compatibility API for a verifier module tree that is not present in this snapshot
+- `runner/` and `verifier/`: the runner/verifier boundary described as absent below has since been restored (see the update note under "What is currently skeletal or unproven") and is covered by `tests/test_repo_smoke.py`
 
 ## What is support infrastructure
 
@@ -35,6 +35,16 @@ This is a first-pass map of the Kepler workspace and the current recovery reposi
 - `scripts/`: potentially destructive or incomplete maintenance scripts; review before use
 
 ## What is currently skeletal or unproven
+
+> Update: the bullets below on `runner/` and `verifier/` describe this
+> repository's 2026-09-15 recovery snapshot and are now stale. Both
+> packages have since been implemented with concrete submodules
+> (`verifier/domain_rules.py`, `verifier/metrics.py`, `verifier/models.py`,
+> `verifier/qc_learning.py`, `verifier/schemas.py`,
+> `runner/orchestrator_adapter.py`, `runner/run_verifier_pipeline.py`) and
+> are exercised by `tests/test_repo_smoke.py`. `workflows/run_verifier_pipeline.py`
+> forwards to the now-present `runner` module. The historical text is kept
+> below for the audit trail.
 
 - `modules/freehold/`: package shells without substantive implementation in this snapshot
 - `skills/*`: multiple manifests describe capabilities, but most corresponding runtime implementations are not present here

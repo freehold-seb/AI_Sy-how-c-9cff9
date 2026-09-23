@@ -2,6 +2,11 @@
 
 Date: 2026-09-15
 
+> Update: `workflows/run_verifier_pipeline.py` and `runner.run_verifier_pipeline`
+> below described a runner package that only contained `__init__.py`; the
+> `runner`/`verifier` packages have since been implemented and are covered
+> by `tests/test_repo_smoke.py`. Kept for the historical record.
+
 ## Question
 
 Are we building something useful, or only creating more code?
@@ -32,7 +37,7 @@ Do not enable or expand orchestration until the missing runner/verifier boundary
 For now:
 
 - keep the bridge active
-- keep the daily briefing read-only
+- keep the daily briefing to reading workspace metadata plus writing its one dated report file (or use `DAILY_BRIEFING_DRY_RUN=1` to skip the write)
 - keep orchestration disabled or explicitly treated as unimplemented
 - do not run archive or mesh scripts
 

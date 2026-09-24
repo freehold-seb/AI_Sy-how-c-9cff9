@@ -37,7 +37,7 @@ Do not enable or expand orchestration until the missing runner/verifier boundary
 For now:
 
 - keep the bridge active
-- keep the daily briefing to reading workspace metadata plus writing its one dated report file (or use `DAILY_BRIEFING_DRY_RUN=1` to skip the write)
+- keep the daily briefing to reading workspace metadata plus creating or replacing the current day's dated report (or use `DAILY_BRIEFING_DRY_RUN=1` to skip the write)
 - keep orchestration disabled or explicitly treated as unimplemented
 - do not run archive or mesh scripts
 

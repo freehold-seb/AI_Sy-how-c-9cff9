@@ -1,9 +1,8 @@
 """Generate a daily project briefing for the current workspace.
 
-This only reads workspace metadata and selected config; it does not modify
-existing files. It does write one new file per run: a dated Markdown report
-under `reports/` (created if missing). Set `DAILY_BRIEFING_DRY_RUN=1` to
-print the report to stdout instead of writing it.
+This only reads workspace metadata and selected config. It creates or replaces
+the current day's Markdown report under `reports/`. Set
+`DAILY_BRIEFING_DRY_RUN=1` to print the report to stdout instead of writing it.
 """
 
 from __future__ import annotations

@@ -1,5 +1,9 @@
 import importlib
 import json
+import sys
+from types import SimpleNamespace
+
+import pytest
 
 from runner.run_verifier_pipeline import run_pipeline
 from verifier import evaluate_candidate
@@ -103,3 +107,27 @@ def test_forgecheck_vendor_rules_import_and_fallback():
             "message": "Review the system classification manually before approving vendor actions.",
         }
     ]
+
+
+def test_prepare_prompt_replaces_existing_mode_label(monkeypatch):
+    module = importlib.import_module("scripts.prepare_prompt")
+    copied = {}
+
+    clipboard = SimpleNamespace(
+        paste=lambda: "SAUCE: tighten this statement",
+        copy=lambda value: copied.setdefault("value", value),
+    )
+    monkeypatch.setattr(module, "_load_clipboard", lambda: clipboard)
+    monkeypatch.setattr(sys, "argv", ["prepare_prompt.py", "translate"])
+
+    assert module.main() == 0
+    assert copied["value"] == "TRANSLATE: tighten this statement"
+
+
+def test_prepare_prompt_errors_when_clipboard_dependency_missing(monkeypatch):
+    module = importlib.import_module("scripts.prepare_prompt")
+    monkeypatch.setattr(module, "_load_clipboard", lambda: None)
+    monkeypatch.setattr(sys, "argv", ["prepare_prompt.py", "TRANSLATE"])
+
+    with pytest.raises(SystemExit):
+        module.main()

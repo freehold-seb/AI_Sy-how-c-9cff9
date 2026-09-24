@@ -204,11 +204,15 @@ The daily briefing generator is read-only and scoped to the current workspace. I
 
 ### Proof 1: daily briefing
 
-Completed on 2026-09-15. Running `scripts/daily_briefing.py` created `reports/daily-briefing-2026-09-15.md` with the expected single-node posture and working-surface checks. The report recorded 92 total files, 27 Python files, and 26 Markdown files. This proves the briefing task executes and produces its local report; it does not prove the broader runtime is complete.
+Completed on 2026-09-15. Running `scripts/daily_briefing.py` created `reports/daily-briefing-2026-09-15.md` with the expected single-node posture and working-surface checks. The report recorded 92 total files, 27 Python files, and 26 Markdown files.
+
+Re-run confirmed on 2026-09-18. Running `scripts/daily_briefing.py` created `reports/daily-briefing-2026-09-18.md` and reported 137 total files, 39 Python files, and 31 Markdown files with the same single-node posture and working-surface checks present. This proves the briefing task executes and produces its local report; it does not prove the broader runtime is complete.
 
 ### Proof 2: restored runner/verifier boundary
 
-The local boundary is implemented and editor diagnostics report no errors. `Run Verifier Tests` is available as a VS Code task and targets `tests/test_repo_smoke.py`. The pytest result is not recorded in this handoff until its output is available.
+The local boundary is implemented and editor diagnostics report no errors. `Run Verifier Tests` is available as a VS Code task and targets `tests/test_repo_smoke.py`.
+
+Observed result on 2026-09-18: `python -m pytest tests/test_repo_smoke.py -q` -> `8 passed in 0.03s`.
 
 ### Proof 3: one real service task
 
@@ -330,7 +334,7 @@ Date: 2026-09-15
 
 - Set `orchestrator_enabled` to `false`.
 - Set `dry_run` to `true` in [config/agent_config.json](config/agent_config.json).
-- Added [scripts/prepare_prompt.py](scripts/prepare_prompt.py) and four VS Code tasks to prepare `TRANSLATE:`, `SAUCE:`, `POLISH:`, or `ELABORATE:` prompts from the clipboard without sending or modifying external systems.
+- Added [scripts/prepare_prompt.py](scripts/prepare_prompt.py) and one VS Code task with a mode picker to prepare `TRANSLATE:`, `SAUCE:`, `POLISH:`, or `ELABORATE:` prompts from the clipboard without sending or modifying external systems.
 - Added [scripts/workspace_inventory.py](scripts/workspace_inventory.py) and the _Inventory Related Workspaces_ task. It reports metadata for the canonical worktree, sibling worktrees, and `freehold-web` without modifying them.
 - Focused validation passed: `python -m py_compile ...` completed successfully and `python -m pytest -q tests\\test_repo_smoke.py` reported `2 passed`.
 

@@ -97,6 +97,35 @@ def test_daily_briefing_recent_files_ignores_git_dirs(tmp_path, monkeypatch):
     assert git_file not in recent
 
 
+def test_daily_briefing_dry_run_prints_without_writing(tmp_path, monkeypatch, capsys):
+    module = importlib.import_module("scripts.daily_briefing")
+    reports = tmp_path / "reports"
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+    monkeypatch.setattr(module, "REPORTS", reports)
+    monkeypatch.setenv("DAILY_BRIEFING_DRY_RUN", "1")
+
+    assert module.main() == 0
+
+    assert capsys.readouterr().out.startswith("# Daily project briefing\n")
+    assert not reports.exists()
+
+
+def test_daily_briefing_replaces_current_day_report(tmp_path, monkeypatch, capsys):
+    module = importlib.import_module("scripts.daily_briefing")
+    reports = tmp_path / "reports"
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+    monkeypatch.setattr(module, "REPORTS", reports)
+    monkeypatch.delenv("DAILY_BRIEFING_DRY_RUN", raising=False)
+
+    assert module.main() == 0
+    first_output = capsys.readouterr().out.strip()
+    assert module.main() == 0
+    second_output = capsys.readouterr().out.strip()
+
+    assert first_output == second_output
+    assert [str(path) for path in reports.iterdir()] == [first_output]
+
+
 def test_forgecheck_vendor_rules_import_and_fallback():
     module = importlib.import_module("forgecheck.forgecheck_core.plan.vendor_rules")
 

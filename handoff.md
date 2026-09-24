@@ -334,7 +334,7 @@ Date: 2026-09-15
 
 - Set `orchestrator_enabled` to `false`.
 - Set `dry_run` to `true` in [config/agent_config.json](config/agent_config.json).
-- Added [scripts/prepare_prompt.py](scripts/prepare_prompt.py) and four VS Code tasks to prepare `TRANSLATE:`, `SAUCE:`, `POLISH:`, or `ELABORATE:` prompts from the clipboard without sending or modifying external systems.
+- Added [scripts/prepare_prompt.py](scripts/prepare_prompt.py) and one VS Code task with a mode picker to prepare `TRANSLATE:`, `SAUCE:`, `POLISH:`, or `ELABORATE:` prompts from the clipboard without sending or modifying external systems.
 - Added [scripts/workspace_inventory.py](scripts/workspace_inventory.py) and the _Inventory Related Workspaces_ task. It reports metadata for the canonical worktree, sibling worktrees, and `freehold-web` without modifying them.
 - Focused validation passed: `python -m py_compile ...` completed successfully and `python -m pytest -q tests\\test_repo_smoke.py` reported `2 passed`.
 

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local AI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Single-node / local-only</p>
+        <h1>Local AI</h1>
+      </div>
+      <div id="status" class="status">Checking Ollama...</div>
+    </header>
+    <section class="layout">
+      <aside>
+        <button id="new-chat" type="button">New conversation</button>
+        <div id="conversations" class="conversations"></div>
+      </aside>
+      <section class="chat">
+        <div id="messages" class="messages">
+          <div class="empty">Start a private conversation with the local model.</div>
+        </div>
+        <form id="chat-form">
+          <label for="model">Model</label>
+          <select id="model"></select>
+          <textarea id="prompt" rows="4" maxlength="100000" placeholder="Message the local model..." required></textarea>
+          <div class="form-row">
+            <span id="error" role="alert"></span>
+            <button id="send" type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

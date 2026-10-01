@@ -21,7 +21,7 @@ The active flow was:
 3. `services/memory_service.py` starts a `MemoryBridge` and loops forever, calling `sync_imports()`.
 4. `MemoryBridge` scans `imports/`, parses supported files, optionally moves processed files into `imports/processed/`, and hands parsed records to `MemoryManager`.
 5. `MemoryManager` writes the durable records to SQLite and updates `config/learned_preferences.json` when repeated preferences become strong enough to promote.
-6. `core/orchestrator.py`, `modules/behavior_engine.py`, and `modules/capture_bridge.py` ask `MemoryManager` for `routing_pack()` / `context_pack()` output and splice that text into the prompt as relevant memory.
+6. `core/orchestrator.py` and `modules/behavior_engine.py` ask `MemoryManager` for memory-pack output and splice relevant memory into prompts. `modules/capture_bridge.py` exposes a `routing_pack()` context lookup for capture-related callers, but does not itself inject text into a model prompt.
 
 There is also a one-off import path from `scripts/system/pull_downstairs_context.ps1`, which writes a snapshot into `imports/` and then calls `MemoryBridge().sync_imports()`.
 
@@ -44,9 +44,11 @@ The live and legacy storage is split across a few places:
 
 The old JSON memory format is still visible in `commands/memory.json.bak`, but the live system no longer reads that file as its source of truth.
 
-## What still works today vs. what is dead
+## What remains implemented vs. what is dead
 
-**Still works, conceptually and in code**
+The items below are present in the recovered source and configuration; the repository handoff says that source presence alone is not proof of current runtime health.
+
+**Implemented in the recovered source**
 
 - The SQLite-backed `MemoryManager`.
 - Importing `.txt`, `.md`, `.log`, `.json`, and `.csv` files through `MemoryBridge`.
@@ -116,4 +118,3 @@ Merged status is based on ancestry in `master` at the recovered remote tip.
 | `perf/non-blocking-cpu-percent` | Made CPU measurement non-blocking | Merged |
 | `perf/optimize-memory-duplicate-detection` | Tightened duplicate-detection memory logic and fixed missing imports | Abandoned / not merged |
 | `perf/replace-bucket-executemany` | Bulk-inserted memory bucket replacements with `executemany` | Merged |
-

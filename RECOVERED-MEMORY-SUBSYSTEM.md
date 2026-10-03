@@ -59,9 +59,9 @@ The items below are present in the recovered source and configuration; the repos
 
 **Dead, brittle, or machine-specific**
 
-- Many scripts and docs hardcode `C:\AI_System`, `C:\Users\smcca`, and `G:\...`.
+- Many scripts and docs hardcode `C:\AI_System`, `C:\Users\<username>`, and `G:\...`.
 - The current machine has no `D:` or `G:` drive, so those paths will fail here unless rewritten.
-- The personal-branch files also assume paths like `C:\Users\smcca\Downloads\...` and `C:\Users\smcca\.copilot\repos\ai_system`.
+- The personal-branch files also assume paths like `C:\Users\<username>\Downloads\...` and `C:\Users\<username>\.copilot\repos\ai_system`.
 - `show-memory-report.py` is just a RAM/process report; it is unrelated to the memory subsystem despite the name.
 - `memory_service.py` at repo root is only a shim now; if someone expects the implementation there, they will look in the wrong place.
 
@@ -95,9 +95,9 @@ At a high level, they add or carry:
 Sensitive path patterns found there include:
 
 - `C:\AI_System`
-- `C:\Users\smcca`
-- `C:\Users\smcca\Downloads\...`
-- `C:\Users\smcca\.copilot\repos\ai_system`
+- `C:\Users\<username>`
+- `C:\Users\<username>\Downloads\...`
+- `C:\Users\<username>\.copilot\repos\ai_system`
 - `G:\...`
 
 ## Quick fix/perf branch census

@@ -1,20 +1,22 @@
 # Recovered memory subsystem
 
-I traced the live memory/context path in `recovered/master`. One important correction: the root `memory_service.py` is only a compatibility launcher; the real service implementation lives in `services/memory_service.py`.
+This report was first committed on 2026-10-01. It describes a recovered source snapshot, but the original inspection date, source repository/remote, and immutable source commit were not preserved. The original workspace's Git metadata was reported unreadable, so the source and branch claims below are historical, unpinned observations that cannot be independently reproduced. They do not establish functionality available or validated in this checkout.
 
-## What it actually did
+One reported detail is that the root `memory_service.py` was a compatibility launcher, while the implementation lived in `services/memory_service.py`.
 
-This subsystem was the repo’s long-term memory for the assistant. It did three jobs:
+## What the recovered source appeared to do
+
+The described subsystem was the repo’s long-term memory for the assistant. It appeared to do three jobs:
 
 1. **Collected outside context**: files dropped into `imports/` were treated as incoming memory material.
 2. **Stored durable memory**: the useful pieces were deduplicated and written into a local SQLite database.
 3. **Injected memory back into prompts**: when the orchestrator or behavior engine built a model prompt, it asked the memory system for a short “relevant memory” pack and inserted that text into the context.
 
-In plain language: it was a local notebook with a filter. It watched for new context, trimmed it into short facts/preferences/summaries, stored it, and then fed the best matching pieces back into later AI calls.
+In plain language: it was intended as a local notebook with a filter. It watched for new context, trimmed it into short facts/preferences/summaries, stored it, and then fed matching pieces back into later AI calls.
 
-## How it was wired up
+## How the recovered source described its wiring
 
-The active flow was:
+The described flow was:
 
 1. `setup_AI_System.ps1` creates `memory_service.py` and registers a scheduled task named `Project-Rutabaga_MemoryService`.
 2. `services/service_watchdog.py` knows about the memory service and supervises it like the other background services.
@@ -25,30 +27,30 @@ The active flow was:
 
 There is also a one-off import path from `scripts/system/pull_downstairs_context.ps1`, which writes a snapshot into `imports/` and then calls `MemoryBridge().sync_imports()`.
 
-## What storage it used
+## Storage described in the recovered source
 
-The live and legacy storage is split across a few places:
+The recovered source described live and legacy storage across these paths:
 
-| Path | Purpose | Status |
+| Path | Purpose | Reported status in recovered snapshot |
 |---|---|---|
-| `data/system.db` | Main SQLite database for `facts`, `notes`, `preferences`, and `summaries` | Active |
-| `config/learned_preferences.json` | Promoted rules and promotion history | Active |
-| `config/memory_bridge.json` | Bridge settings like watched extensions, archive behavior, and file-size limit | Active |
-| `commands/memory_bridge_state.json` | Seen-file tracking for import de-duplication | Active state file |
-| `imports/` | Incoming memory files waiting to be parsed | Active |
-| `imports/processed/` | Archive for files already imported | Active if archiving is enabled |
-| `exports/` | Exported memory bundles | Active |
-| `config/dispatch_preferences.json` | Success/failure counters for dispatch method ordering | Active, but separate from memory content |
-| `logs/agent_dispatch.log` / `logs/memory_service.log` | Operational logs | Active |
+| `data/system.db` | Main SQLite database for `facts`, `notes`, `preferences`, and `summaries` | Described as active |
+| `config/learned_preferences.json` | Promoted rules and promotion history | Described as active |
+| `config/memory_bridge.json` | Bridge settings like watched extensions, archive behavior, and file-size limit | Described as active |
+| `commands/memory_bridge_state.json` | Seen-file tracking for import de-duplication | Described as active state |
+| `imports/` | Incoming memory files waiting to be parsed | Described as active |
+| `imports/processed/` | Archive for files already imported | Described as active if archiving is enabled |
+| `exports/` | Exported memory bundles | Described as active |
+| `config/dispatch_preferences.json` | Success/failure counters for dispatch method ordering | Described as active, but separate from memory content |
+| `logs/agent_dispatch.log` / `logs/memory_service.log` | Operational logs | Described as active |
 | `commands/memory.json.bak` | Old JSON-format memory dump | Legacy backup, not part of the active flow |
 
-The old JSON memory format is still visible in `commands/memory.json.bak`, but the live system no longer reads that file as its source of truth.
+The report described `commands/memory.json.bak` as a legacy format rather than the live source of truth; that behavior is not verified in this checkout.
 
-## What remains implemented vs. what is dead
+## Features reported in recovered source vs. paths described as dead or brittle
 
-The items below are present in the recovered source and configuration; the repository handoff says that source presence alone is not proof of current runtime health.
+The items below were reported in the recovered source and configuration. The implementations and supporting scripts are not present in this checkout, so none of these features is available or validated here.
 
-**Implemented in the recovered source**
+**Reported as implemented in the recovered source**
 
 - The SQLite-backed `MemoryManager`.
 - Importing `.txt`, `.md`, `.log`, `.json`, and `.csv` files through `MemoryBridge`.
@@ -57,7 +59,7 @@ The items below are present in the recovered source and configuration; the repos
 - Prompt enrichment through `routing_pack()` / `context_pack()`.
 - The handoff mirror sync tooling in `scripts/system/sync_handoffs.py`.
 
-**Dead, brittle, or machine-specific**
+**Described as dead, brittle, or machine-specific**
 
 - Many scripts and docs hardcode `C:\AI_System`, `C:\Users\<username>`, and `G:\...`.
 - The current machine has no `D:` or `G:` drive, so those paths will fail here unless rewritten.
@@ -65,24 +67,24 @@ The items below are present in the recovered source and configuration; the repos
 - `show-memory-report.py` is just a RAM/process report; it is unrelated to the memory subsystem despite the name.
 - `memory_service.py` at repo root is only a shim now; if someone expects the implementation there, they will look in the wrong place.
 
-## What is worth reviving
+## What might be worth reviving
 
-If the goal is to make the current AI tooling better right now, these are the pieces I would keep:
+If rebuilding a memory feature for the current project, these are the pieces I would consider:
 
 1. **`MemoryManager.routing_pack()` + the prompt injection hooks**  
-   This is the highest-value part. It turns past facts and preferences into live context for future AI calls.
+   This was described as the part that could turn past facts and preferences into context for future AI calls.
 
 2. **`MemoryBridge.sync_imports()`**  
-   This is the ingestion bridge. It lets the system absorb external exports, notes, and snapshots instead of starting from zero every session.
+   This was described as the ingestion bridge for external exports, notes, and snapshots.
 
 3. **`learn()` / `compact()` / `promote_preferences()`**  
-   This is the real “memory quality” layer. It deduplicates repeated statements, summarizes them, and turns repeated preferences into durable rules.
+   These were described as the “memory quality” layer for deduplicating repeated statements, summarizing them, and promoting repeated preferences.
 
 What I would *not* revive as-is: the hardcoded paths, the legacy `.bak` memory dump, and the old machine-specific backup choreography. Those should be retooled around the SQLite store and config-driven paths, not copied back verbatim.
 
 ## Personal branches
 
-`mom-personal` and `sebastian-personal` point to the same tip commit, so they are effectively the same snapshot. Both are much closer to a personal workstation image than to `master`.
+The recovered snapshot reportedly had `mom-personal` and `sebastian-personal` at the same tip commit, making them effectively the same snapshot. Both were described as closer to a personal workstation image than to `master`.
 
 At a high level, they add or carry:
 
@@ -102,13 +104,13 @@ Sensitive path patterns found there include:
 
 ## Quick fix/perf branch census
 
-Merged status is based on ancestry in `master` at the recovered remote tip.
+The statuses below are historical ancestry claims from the recovered snapshot, not a live status check. “Not merged” does not imply that a branch was abandoned.
 
 | Branch | What it fixed / changed | Status |
 |---|---|---|
-| `fix/backend-venv-detection` | Selected the interpreter that actually had `uvicorn` installed | Abandoned / not merged |
+| `fix/backend-venv-detection` | Selected the interpreter that actually had `uvicorn` installed | Not merged |
 | `fix/continuous-mesh-sync` | Added fail-closed continuous mesh sync | Merged |
-| `fix/emergency-sync-conflict-markers` | Removed accidental merge-conflict markers left by emergency sync | Abandoned / not merged |
+| `fix/emergency-sync-conflict-markers` | Removed accidental merge-conflict markers left by emergency sync | Not merged |
 | `fix/mesh-self-target-verification` | Recorded daemon-level SSH restrictions for self-target verification | Merged |
 | `fix/mesh-verifier-configured-key` | Made the mesh verifier use the configured key | Merged |
 | `fix/node2-safe-launch-bom` | Handled BOM-prefixed Python files in upstairs preflight | Merged |
@@ -116,5 +118,5 @@ Merged status is based on ancestry in `master` at the recovered remote tip.
 | `perf/json-load-cache` | Saved local testing state; not really a runtime performance change | Merged |
 | `perf/native-clipboard` | Switched clipboard management to native Win32 ctypes for speed | Merged |
 | `perf/non-blocking-cpu-percent` | Made CPU measurement non-blocking | Merged |
-| `perf/optimize-memory-duplicate-detection` | Tightened duplicate-detection memory logic and fixed missing imports | Abandoned / not merged |
+| `perf/optimize-memory-duplicate-detection` | Tightened duplicate-detection memory logic and fixed missing imports | Not merged |
 | `perf/replace-bucket-executemany` | Bulk-inserted memory bucket replacements with `executemany` | Merged |
